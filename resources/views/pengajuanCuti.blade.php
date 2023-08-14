@@ -7,9 +7,9 @@
         <p class="card-description">
           Add class <code>.table-hover</code>
         </p>
-        {{-- <div class="btn-group float-sm-right">
+        <div class="btn-group float-sm-right">
             <button type="button" class="btn btn-success waves-effect waves-light m-1" data-toggle="modal" data-target="#modaltambah"> <i class="fa fa fa-plus"></i> Tambah</button>
-        </div> --}}
+        </div>
         <div class="table-responsive">
             <h4>Pilih Bulan dan Tahun </h4>
             <select id="month" name="month">
@@ -43,7 +43,8 @@
                         <tr>
                             <th style="width:5px;">No</th>
                             <th>Nama Karyawan</th>
-                            <th>Tanggal Pengajuan Cuti</th>
+                            <th>Tanggal Mulai Pengajuan Cuti</th>
+                            <th>Tanggal Selesai Pengajuan Cuti</th>
                             <th>Keterangan Cuti</th>
                             <th>Status Cuti</th>
                             <th style="text-align:center;">Action</th>
@@ -51,11 +52,12 @@
                     </thead>
                     <tbody>
                         @php $i=1; @endphp
-                        @foreach($cutiPerMonth as $cuti)
+                        @foreach($PengajuanCuti as $cuti)
                         <tr>
                             <td>{{$i}}</td>
-                            <td>{{$cuti->nama}}</td>
-                            <td>{{$cuti->tanggal_cuti}}</td>
+                            <td>{{$cuti->karyawan->nama}}</td>
+                            <td>{{$cuti->tanggal_mulai_cuti}}</td>
+                            <td>{{$cuti->tanggal_mulai_cuti}}</td>
                             <td>{{$cuti->keterangan_cuti}}</td>
                             <td>{{$cuti->status_cuti}}</td>
                             <td style="text-align:center;">
@@ -151,8 +153,13 @@
 
 
                 <div class="form-group">
-                    <label for="input-1">Tanggal Cuti<span style="color: #ff5252;">*</span></label>
-                    <input type="text" class="form-control" id="input-1" required name="tanggal_cuti" placeholder="yyyy-mm-dd hh:mm:ss" value="<?php echo date('Y-m-d') ?>">
+                    <label for="input-1">Tanggal Mulai Cuti<span style="color: #ff5252;">*</span></label>
+                    <input type="text" class="form-control" id="input-1" required name="tanggal_mulai_cuti" placeholder="yyyy-mm-dd hh:mm:ss" value="<?php echo date('Y-m-d') ?>">
+                </div>
+
+                <div class="form-group">
+                    <label for="input-1">Tanggal Selesai Cuti<span style="color: #ff5252;">*</span></label>
+                    <input type="text" class="form-control" id="input-1" required name="tanggal_selesai_cuti" placeholder="yyyy-mm-dd hh:mm:ss" value="<?php echo date('Y-m-d') ?>">
                 </div>
 
                 <div class="form-group">
@@ -402,8 +409,8 @@
         dangerMode: true,
         }).then((willDelete) => {
             if (willDelete) {
-                pageloader();
                 window.location.href="{{url('hapus_pengajuanCuti')}}/"+$id_pengajuanCuti;
+                pageloader();
             } 
         });
     }
@@ -418,8 +425,8 @@
         dangerMode: true,
         }).then((willDelete) => {
             if (willDelete) {
-                pageloader();
                 window.location.href="{{url('hapus_pengajuanCuti')}}/"+$id_pengajuanCuti;
+                pageloader();
             } 
         });
     }
@@ -434,8 +441,8 @@
         }).then((willDelete) => {
             if (willDelete) {
                 console.log($id_tolak);
-                pageloader();
                 window.location.href="{{url('tolak_pengajuanCuti')}}/"+$id_tolak;
+                pageloader();
             } 
         });
     }
@@ -449,8 +456,8 @@
         dangerMode: true,
         }).then((willDelete) => {
             if (willDelete) {
-                pageloader();
                 window.location.href="{{url('terima_pengajuanCuti')}}/"+$id_terima;
+                pageloader();
             } 
         });
     }
@@ -469,8 +476,8 @@
             type: 'get',
             success: function(res){
                 console.log('sucess = ', this.url);
-                pageloader();
                 window.location.href=this.url;
+                pageloader();
             }
         });
     }

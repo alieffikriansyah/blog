@@ -13,17 +13,17 @@ class AbsensiController extends Controller
     {
         $this->middleware('auth');
     }
-    
+
     public function absensi(Request $request)
     {
         // dd($request);
         // $request->user()->authorizeRoles(['superadmin', 'admin']);
         $request->user();
-        
+
         $absensi = Absensi::all();
         $karyawan = Karyawan::all();
 
-        $days_in_month = cal_days_in_month(CAL_GREGORIAN,date('m'),date('Y'));
+        $days_in_month = cal_days_in_month(CAL_GREGORIAN, date('m'), date('Y'));
         $days = date('d');
         $months = date('m');
         $months_name = date('M');
@@ -33,8 +33,8 @@ class AbsensiController extends Controller
         $arrTimes = [];
         $allAbsenPerDay = [];
 
-        for ($i=1; $i <= $days_in_month; $i++) {
-            $tempDate = date_create($years."-".$months."-".$i);
+        for ($i = 1; $i <= $days_in_month; $i++) {
+            $tempDate = date_create($years . "-" . $months . "-" . $i);
             array_push($arrDays, date_format($tempDate, "l, jS F Y"));
             array_push($arrTimes, $tempDate->format('Y-m-d'));
 
@@ -52,8 +52,10 @@ class AbsensiController extends Controller
 
         // var_dump($countAbsenPerDays);
 
-        return view('absensi',
-        compact('absensi', 'days_in_month', 'months', 'years', 'arrDays', 'arrTimes', 'allAbsenPerDay', 'karyawan'));
+        return view(
+            'absensi',
+            compact('absensi', 'days_in_month', 'months', 'years', 'arrDays', 'arrTimes', 'allAbsenPerDay', 'karyawan')
+        );
     }
 
     public function absensiWithDate(Request $request)
@@ -61,10 +63,10 @@ class AbsensiController extends Controller
         // $request->user()->authorizeRoles(['superadmin', 'admin']);
         $request->user();
 
-        $paths = explode('-',$request->query('date'));
+        $paths = explode('-', $request->query('date'));
         $months = date('m');
         $years = date('Y');
-        
+
         if (count($paths) > 1) {
             $months = (int)$paths[1];
             $years = (int)$paths[0];
@@ -76,21 +78,21 @@ class AbsensiController extends Controller
 
         // var_dump($paths);
 
-        
-        
+
+
         $absensi = Absensi::all();
         $karyawan = Karyawan::all();
 
         // var_dump($months, $years);
 
-        $days_in_month = cal_days_in_month(CAL_GREGORIAN,$months,$years);
+        $days_in_month = cal_days_in_month(CAL_GREGORIAN, $months, $years);
 
         $arrDays = [];
         $arrTimes = [];
         $allAbsenPerDay = [];
 
-        for ($i=1; $i <= $days_in_month; $i++) {
-            $tempDate = date_create($years."-".$months."-".$i);
+        for ($i = 1; $i <= $days_in_month; $i++) {
+            $tempDate = date_create($years . "-" . $months . "-" . $i);
             array_push($arrDays, date_format($tempDate, "l, jS F Y"));
             array_push($arrTimes, $tempDate->format('Y-m-d'));
 
@@ -102,7 +104,7 @@ class AbsensiController extends Controller
                 AND MONTH(tanggaldanwaktu_absensi) = MONTH(?) 
                 AND YEAR(tanggaldanwaktu_absensi) = YEAR(?)
             ', [$tempDate, $tempDate, $tempDate]);
-           
+
             array_push($allAbsenPerDay, $absen);
         }
 
@@ -124,9 +126,9 @@ class AbsensiController extends Controller
             }
             $absensi->status_hari = $request->status_hari;
 
-            if ($request->keterangan_cuti) {
-                $absensi->keterangan_cuti = $request->keterangan_cuti;
-            }
+            // if ($request->keterangan_cuti) {
+            // $absensi->keterangan_cuti = $request->keterangan_cuti;
+            // }
 
             $absensi->save();
 
@@ -134,7 +136,7 @@ class AbsensiController extends Controller
             return back()->with('success', 'Data absensi baru telah berhasil ditambahakan');
         } catch (Exception $e) {
             DB::rollBack();
-            return back()->with('error', 'Oops Sepertinya ada masalah pada sistem\n\nPesan error: '.$e);
+            return back()->with('error', 'Oops Sepertinya ada masalah pada sistem\n\nPesan error: ' . $e);
         }
     }
     public function get_ubah_absensi($id_absensi)
@@ -178,7 +180,7 @@ class AbsensiController extends Controller
             $absensi->tipe_absensi = $request->tipe_absensi_ubah;
             $absensi->keterangan_absensi = $request->keterangan_absensi_ubah;
             $absensi->status_hari = $request->status_hari_ubah;
-            $absensi->keterangan_cuti = $request->keterangan_cuti_ubah;
+            // $absensi->keterangan_cuti = $request->keterangan_cuti_ubah;
 
             $absensi->save();
 
@@ -186,20 +188,20 @@ class AbsensiController extends Controller
             return back()->with('success', 'Data absensi telah berhasil diubah');
         } catch (Exception $e) {
             DB::rollBack();
-            return back()->with('error', 'Oops Sepertinya ada masalah pada sistem\n\nPesan error: '.$e);
+            return back()->with('error', 'Oops Sepertinya ada masalah pada sistem\n\nPesan error: ' . $e);
         }
-        }
+    }
     public function hapus_absensi($id_absensi)
     {
         DB::beginTransaction();
         try {
             Absensi::find($id_absensi)->delete();
-            
+
             DB::commit();
-            return back()->with('success', 'Absensi telah berhasil dihapus'); 
+            return back()->with('success', 'Absensi telah berhasil dihapus');
         } catch (Exception $e) {
             DB::rollBack();
-            return back()->with('error', 'Oops Sepertinya ada masalah pada sistem\n\nPesan error: '.$e);
+            return back()->with('error', 'Oops Sepertinya ada masalah pada sistem\n\nPesan error: ' . $e);
         }
     }
 }

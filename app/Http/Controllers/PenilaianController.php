@@ -17,19 +17,19 @@ class PenilaianController extends Controller
     {
         $this->middleware('auth');
     }
-    
+
     public function penilaian(Request $request)
     {
         // $request->user()->authorizeRoles(['superadmin', 'admin']);
         $request->user();
-        
+
         $penilaian = Penilaian::all();
         $karyawan = Karyawan::all();
         $formPenilaian = FormPenilaian::all();
 
         // dd($penilaian[0]->formPenilaian);
 
-        $days_in_month = cal_days_in_month(CAL_GREGORIAN,date('m'),date('Y'));
+        $days_in_month = cal_days_in_month(CAL_GREGORIAN, date('m'), date('Y'));
         $days = date('d');
         $months = date('m');
         $months_name = date('M');
@@ -39,8 +39,8 @@ class PenilaianController extends Controller
         $arrTimes = [];
         $allAbsenPerDay = [];
 
-        for ($i=1; $i <= $days_in_month; $i++) {
-            $tempDate = date_create($years."-".$months."-".$i);
+        for ($i = 1; $i <= $days_in_month; $i++) {
+            $tempDate = date_create($years . "-" . $months . "-" . $i);
             array_push($arrDays, date_format($tempDate, "l, jS F Y"));
             array_push($arrTimes, $tempDate->format('Y-m-d'));
 
@@ -55,18 +55,20 @@ class PenilaianController extends Controller
 
             array_push($allAbsenPerDay, $absen);
         }
-        return view('penilaian',
-        compact('penilaian', 'formPenilaian', 'days_in_month', 'months', 'years', 'arrDays', 'arrTimes', 'allAbsenPerDay', 'karyawan'));
+        return view(
+            'penilaian',
+            compact('penilaian', 'formPenilaian', 'days_in_month', 'months', 'years', 'arrDays', 'arrTimes', 'allAbsenPerDay', 'karyawan')
+        );
     }
 
     public function penilaianWithDate(Request $request)
     {
         $request->user();
-        $paths = explode('-',$request->query('date'));
+        $paths = explode('-', $request->query('date'));
 
         $months = date('m');
         $years = date('Y');
-        
+
         if (count($paths) > 1) {
             $months = (int)$paths[1];
             $years = (int)$paths[0];
@@ -86,15 +88,15 @@ class PenilaianController extends Controller
         //     INNER JOIN jabatan on karyawan.jabatan_id_jabatan = jabatan.id_jabatan
         // ');
         $karyawan = Karyawan::all();
-        
-       
+
+
         // var_dump($months, $years);
-        $days_in_month = cal_days_in_month(CAL_GREGORIAN,$months,$years);
+        $days_in_month = cal_days_in_month(CAL_GREGORIAN, $months, $years);
 
         $arrDays = [];
         $arrTimes = [];
 
-        $tempDate = date_create($years."-".$months);
+        $tempDate = date_create($years . "-" . $months);
         array_push($arrDays, date_format($tempDate, "l, jS F Y"));
         array_push($arrTimes, $tempDate->format('Y-m-d'));
 
@@ -112,8 +114,7 @@ class PenilaianController extends Controller
         // var_dump($penilaianPerMonth);
 
         $penilaian = $penilaianPerMonth;
-
-        return view('penilaian', compact('penilaian', 'days_in_month', 'months', 'years', 'arrDays', 'arrTimes', 'penilaianPerMonth', 'karyawan' ,'formPenilaian'));
+        return view('penilaian', compact('penilaian', 'days_in_month', 'months', 'years', 'arrDays', 'arrTimes', 'penilaianPerMonth', 'karyawan', 'formPenilaian'));
     }
 
     public function tambah_penilaian(Request $request)
@@ -134,7 +135,7 @@ class PenilaianController extends Controller
             return back()->with('success', 'Data Penilaian baru telah berhasil ditambahakan');
         } catch (Exception $e) {
             DB::rollBack();
-            return back()->with('error', 'Oops Sepertinya ada masalah pada sistem\n\nPesan error: '.$e);
+            return back()->with('error', 'Oops Sepertinya ada masalah pada sistem\n\nPesan error: ' . $e);
         }
     }
 
@@ -162,7 +163,7 @@ class PenilaianController extends Controller
     //         $Penilaian->absensi_id_absensi = $absensi->id_absensi;
 
     //         $Penilaian->save();
-            
+
 
     //         DB::commit();
     //         return back()->with('success', 'Data Penilaian telah berhasil diterima');
@@ -242,7 +243,7 @@ class PenilaianController extends Controller
             return back()->with('success', 'Data Penilaian telah berhasil diubah');
         } catch (Exception $e) {
             DB::rollBack();
-            return back()->with('error', 'Oops Sepertinya ada masalah pada sistem\n\nPesan error: '.$e);
+            return back()->with('error', 'Oops Sepertinya ada masalah pada sistem\n\nPesan error: ' . $e);
         }
     }
     public function hapus_penilaian($id_penilaian)
@@ -250,12 +251,12 @@ class PenilaianController extends Controller
         DB::beginTransaction();
         try {
             Penilaian::find($id_penilaian)->delete();
-            
+
             DB::commit();
-            return back()->with('success', 'Penilaian telah berhasil dihapus'); 
+            return back()->with('success', 'Penilaian telah berhasil dihapus');
         } catch (Exception $e) {
             DB::rollBack();
-            return back()->with('error', 'Oops Sepertinya ada masalah pada sistem\n\nPesan error: '.$e);
+            return back()->with('error', 'Oops Sepertinya ada masalah pada sistem\n\nPesan error: ' . $e);
         }
     }
 
@@ -284,7 +285,7 @@ class PenilaianController extends Controller
 
             if ($detailFormPenilaiansCount > 0) {
                 $penilaian->nilai_skor = $result / ($detailFormPenilaiansCount * 5) * 100;
-            } 
+            }
 
             $penilaian->save();
 
@@ -292,7 +293,7 @@ class PenilaianController extends Controller
             return back()->with('success', 'Data penilaian telah berhasil diubah');
         } catch (Exception $e) {
             DB::rollBack();
-            return back()->with('error', 'Oops Sepertinya ada masalah pada sistem\n\nPesan error: '.$e);
+            return back()->with('error', 'Oops Sepertinya ada masalah pada sistem\n\nPesan error: ' . $e);
         }
     }
 }

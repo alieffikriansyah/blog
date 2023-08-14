@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\pengajuanCuti;
+use App\karyawan;
+use App\Absensi;
+use Illuminate\Support\Facades\DB;
 
 class PengajuanCutiController extends Controller
 {
@@ -10,16 +14,16 @@ class PengajuanCutiController extends Controller
     {
         $this->middleware('auth');
     }
-    
+
     public function PengajuanCuti(Request $request)
     {
         // $request->user()->authorizeRoles(['superadmin', 'admin']);
         $request->user();
-        
-        $PengajuanCuti = PengajuanCuti::all();
-        $karyawan = Karyawan::all();
 
-        $days_in_month = cal_days_in_month(CAL_GREGORIAN,date('m'),date('Y'));
+        $PengajuanCuti = pengajuanCuti::all();
+        $karyawan = karyawan::all();
+
+        $days_in_month = cal_days_in_month(CAL_GREGORIAN, date('m'), date('Y'));
         $days = date('d');
         $months = date('m');
         $months_name = date('M');
@@ -29,17 +33,17 @@ class PengajuanCutiController extends Controller
         $arrTimes = [];
         $allAbsenPerDay = [];
 
-        for ($i=1; $i <= $days_in_month; $i++) {
-            $tempDate = date_create($years."-".$months."-".$i);
+        for ($i = 1; $i <= $days_in_month; $i++) {
+            $tempDate = date_create($years . "-" . $months . "-" . $i);
             array_push($arrDays, date_format($tempDate, "l, jS F Y"));
             array_push($arrTimes, $tempDate->format('Y-m-d'));
 
             $absen = DB::select('
-                SELECT idpengajuan_cuti ,karyawan_id_karyawan, nama, tanggal_cuti, keterangan_cuti, status_cuti
+                SELECT idpengajuan_cuti ,karyawan_id_karyawan, nama, tanggal_mulai_cuti, keterangan_cuti, status_cuti
                 FROM pengajuan_cuti
                 INNER JOIN karyawan ON pengajuan_cuti.karyawan_id_karyawan = karyawan.id_karyawan
-                AND MONTH(tanggal_cuti) = MONTH(?) 
-                AND YEAR(tanggal_cuti) = YEAR(?)
+                AND MONTH(tanggal_mulai_cuti) = MONTH(?) 
+                AND YEAR(tanggal_mulai_cuti) = YEAR(?)
             ', [$tempDate, $tempDate]);
 
             array_push($allAbsenPerDay, $absen);
@@ -47,20 +51,22 @@ class PengajuanCutiController extends Controller
 
         // var_dump($countAbsenPerDays);
 
-        return view('PengajuanCuti',
-        compact('PengajuanCuti', 'days_in_month', 'months', 'years', 'arrDays', 'arrTimes', 'allAbsenPerDay', 'karyawan'));
+        return view(
+            'PengajuanCuti',
+            compact('PengajuanCuti', 'days_in_month', 'months', 'years', 'arrDays', 'arrTimes', 'allAbsenPerDay', 'karyawan')
+        );
     }
 
     public function pengajuanCutiWithDate(Request $request)
     {
         $request->user()->authorizeRoles(['superadmin', 'admin']);
 
-        $paths = explode('-',$request->query('date'));
-        
+        $paths = explode('-', $request->query('date'));
+
         // to get current month and year
         $months = date('m');
         $years = date('Y');
-        
+
         if (count($paths) > 1) {
             $months = (int)$paths[1];
             $years = (int)$paths[0];
@@ -70,18 +76,18 @@ class PengajuanCutiController extends Controller
         // return;
 
         // var_dump($paths);
-        
+
         $PengajuanCuti = PengajuanCuti::all();
         $karyawan = Karyawan::all();
 
         // var_dump($months, $years);
 
-        $days_in_month = cal_days_in_month(CAL_GREGORIAN,$months,$years);
+        $days_in_month = cal_days_in_month(CAL_GREGORIAN, $months, $years);
 
         $arrDays = [];
         $arrTimes = [];
 
-        $tempDate = date_create($years."-".$months);
+        $tempDate = date_create($years . "-" . $months);
         array_push($arrDays, date_format($tempDate, "l, jS F Y"));
         array_push($arrTimes, $tempDate->format('Y-m-d'));
 
@@ -105,7 +111,8 @@ class PengajuanCutiController extends Controller
             $PengajuanCuti = new PengajuanCuti();
             $PengajuanCuti->status_cuti = 'pending';
             $PengajuanCuti->karyawan_id_karyawan = $request->karyawan;
-            $PengajuanCuti->tanggal_cuti = $request->tanggal_cuti;
+            $PengajuanCuti->tanggal_mulai_cuti = $request->tanggal_mulai_cuti;
+            $PengajuanCuti->tanggal_selesai_cuti = $request->tanggal_selesai_cuti;
 
             if ($request->keterangan_cuti) {
                 $PengajuanCuti->keterangan_cuti = $request->keterangan_cuti;
@@ -117,7 +124,7 @@ class PengajuanCutiController extends Controller
             return back()->with('success', 'Data PengajuanCuti baru telah berhasil ditambahakan');
         } catch (Exception $e) {
             DB::rollBack();
-            return back()->with('error', 'Oops Sepertinya ada masalah pada sistem\n\nPesan error: '.$e);
+            return back()->with('error', 'Oops Sepertinya ada masalah pada sistem\n\nPesan error: ' . $e);
         }
     }
 
@@ -136,22 +143,14 @@ class PengajuanCutiController extends Controller
                 return back()->with('success', 'Data PengajuanCuti telah berhasil diterima');
             }
 
-            $absensi = new Absensi();
-            $absensi->karyawan_id_karyawan = $PengajuanCuti->karyawan_id_karyawan;
-            $absensi->tanggaldanwaktu_absensi = $PengajuanCuti->tanggal_cuti;
-            $absensi->tipe_absensi = 'cuti';
-            $absensi->save();
-
-            $PengajuanCuti->absensi_id_absensi = $absensi->id_absensi;
-
             $PengajuanCuti->save();
-            
+
 
             DB::commit();
             return back()->with('success', 'Data PengajuanCuti telah berhasil diterima');
         } catch (Exception $e) {
             DB::rollBack();
-            return back()->with('error', 'Oops Sepertinya ada masalah pada sistem\n\nPesan error: '.$e);
+            return back()->with('error', 'Oops Sepertinya ada masalah pada sistem\n\nPesan error: ' . $e);
         }
     }
 
@@ -162,18 +161,13 @@ class PengajuanCutiController extends Controller
             $PengajuanCuti = PengajuanCuti::find($request->id);
             $PengajuanCuti->status_cuti = 'tolak';
 
-            if ($PengajuanCuti->absensi_id_absensi) {
-                Absensi::find($PengajuanCuti->absensi_id_absensi)->delete();
-                $PengajuanCuti->absensi_id_absensi= NULL;
-            }
-
             $PengajuanCuti->save();
 
             DB::commit();
             return back()->with('success', 'Data PengajuanCuti telah berhasil ditolak');
         } catch (Exception $e) {
             DB::rollBack();
-            return back()->with('error', 'Oops Sepertinya ada masalah pada sistem\n\nPesan error: '.$e);
+            return back()->with('error', 'Oops Sepertinya ada masalah pada sistem\n\nPesan error: ' . $e);
         }
     }
 
@@ -227,7 +221,7 @@ class PengajuanCutiController extends Controller
             return back()->with('success', 'Data PengajuanCuti telah berhasil diubah');
         } catch (Exception $e) {
             DB::rollBack();
-            return back()->with('error', 'Oops Sepertinya ada masalah pada sistem\n\nPesan error: '.$e);
+            return back()->with('error', 'Oops Sepertinya ada masalah pada sistem\n\nPesan error: ' . $e);
         }
     }
     public function hapus_pengajuanCuti($id_pengajuanCuti)
@@ -235,12 +229,12 @@ class PengajuanCutiController extends Controller
         DB::beginTransaction();
         try {
             PengajuanCuti::find($id_pengajuanCuti)->delete();
-            
+
             DB::commit();
-            return back()->with('success', 'PengajuanCuti telah berhasil dihapus'); 
+            return back()->with('success', 'PengajuanCuti telah berhasil dihapus');
         } catch (Exception $e) {
             DB::rollBack();
-            return back()->with('error', 'Oops Sepertinya ada masalah pada sistem\n\nPesan error: '.$e);
+            return back()->with('error', 'Oops Sepertinya ada masalah pada sistem\n\nPesan error: ' . $e);
         }
     }
 }
