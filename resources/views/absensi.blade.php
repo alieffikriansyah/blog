@@ -6,7 +6,7 @@
         <div class="card-body">
             <h4 class="page-title">Absensi <br> Bulan : {{$months}} <br> Tahun : {{$years}}</h4>
             <p class="card-description">
-                Add class <code>.table-hover</code>
+                Add class <code>.table-hover </code>
             </p>
             {{-- <div class="btn-group float-sm-right">
             <button type="button" class="btn btn-success waves-effect waves-light m-1" data-toggle="modal" data-target="#modaltambah"> <i class="fa fa fa-plus"></i> Tambah</button>
