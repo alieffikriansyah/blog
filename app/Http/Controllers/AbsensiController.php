@@ -188,6 +188,7 @@ class AbsensiController extends Controller
 
     public function get_absen_absensi($day)
     {
+        // dd($day);
         $time = strtotime($day);
         $time = date('Y-m-d', $time);
 
@@ -202,7 +203,7 @@ class AbsensiController extends Controller
     ';
 
         if(Auth::user()->karyawan){
-            $query .= ' AND WHERE users.id = ' . Auth::user()->id;
+            $query .= ' AND karyawan.user_id_user = ' . Auth::user()->id;
         }
 
         $absen_todays = DB::select(($query), [$time, $time, $time]);
