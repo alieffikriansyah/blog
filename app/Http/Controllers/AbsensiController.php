@@ -143,6 +143,14 @@ class AbsensiController extends Controller
             // $absensi->keterangan_cuti = $request->keterangan_cuti;
             // }
 
+            // INSERT LOG ABSENSI
+            // CHECK KARYAWAN/ADMIN
+            // if(Auth::user()->karyawan){
+            //     // INSERT LOG SEBAGAI KARYAWAN - OPERATION -> INSERT
+            // } else {
+            //     // INSERT LOG SEBAGAI ADMIN - OPERATION -> INSERT
+            // }
+
             $absensi->save();
 
             DB::commit();
@@ -223,6 +231,14 @@ class AbsensiController extends Controller
             $absensi->status_hari = $request->status_hari_ubah;
             // $absensi->keterangan_cuti = $request->keterangan_cuti_ubah;
 
+            // UPDATE LOG ABSENSI untuk ID ABSENSI yang diubah
+            // CHECK KARYAWAN/ADMIN
+            // if(Auth::user()->karyawan){
+            //     // INSERT LOG SEBAGAI KARYAWAN - OPERATION -> UPDATE 
+            // } else {
+            //     // INSERT LOG SEBAGAI ADMIN - OPERATION -> UPDATE
+            // }
+
             $absensi->save();
 
             DB::commit();
@@ -237,6 +253,14 @@ class AbsensiController extends Controller
         DB::beginTransaction();
         try {
             Absensi::find($id_absensi)->delete();
+
+             // ADD LOG ABSENSI untuk ID ABSENSI yang dihapus
+            // CHECK KARYAWAN/ADMIN
+            // if(Auth::user()->karyawan){
+            //     // INSERT LOG SEBAGAI KARYAWAN - OPERATION -> DELETE 
+            // } else {
+            //     // INSERT LOG SEBAGAI ADMIN - OPERATION -> DELETE
+            // }
 
             DB::commit();
             return back()->with('success', 'Absensi telah berhasil dihapus');
