@@ -114,6 +114,7 @@ class PenghargaanController extends Controller
                 $bonusGaji =( $nilaiAbsen + $nilaiPenilaian  ) * $nilaiSanksi;
             
     
+                
                 $gajiTotal = $k->gaji_pokok + $bonusGaji;
     
                 $karyawanTemp->karyawan = $k;
