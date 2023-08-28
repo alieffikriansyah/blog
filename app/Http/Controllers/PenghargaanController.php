@@ -108,6 +108,7 @@ class PenghargaanController extends Controller
                 $nilaiAbsen = self::getNilaiAbsenPerKaryawan($k->id_karyawan, $months, $years);
                 $nilaiSanksi = self::getNilaiSanksiPerKaryawan($k->id_karyawan, $months, $years)/100;
                 $nilaiPenilaian = self::getFormPenilaianPerKaryawan($k->id_karyawan, $months, $years);
+                $nilaiBonusPenjualan = self::getBonusPenjualanPerKaryawan($k->id_karyawan, $months, $years);
               
     
                 $bonusGaji =( $nilaiAbsen + $nilaiPenilaian  ) * $nilaiSanksi;
@@ -122,6 +123,7 @@ class PenghargaanController extends Controller
                 $karyawanTemp->nilaiAbsen = $nilaiAbsen;
                 $karyawanTemp->nilaiSanksi = $nilaiSanksi;
                 $karyawanTemp->nilaiPenilaian = $nilaiPenilaian;
+                $karyawanTemp->nilaiBonusPenjualan = $nilaiBonusPenjualan;
               
     
                 array_push($result, $karyawanTemp);
@@ -218,9 +220,7 @@ class PenghargaanController extends Controller
 
         // dd($jumlahAbsenPerBulan);
 
-         if($jumlahAbsenPerBulan[0]->count/$days_in_month) {
-            return  30000;
-        }
+        return $jumlahAbsenPerBulan[0]->count*30000;
        
     }
        
@@ -288,6 +288,24 @@ class PenghargaanController extends Controller
         
     }
 
+    public function getBonusPenjualanPerKaryawan($id_karyawan, $months, $years) 
+    {
+        $days_in_month = cal_days_in_month(CAL_GREGORIAN,$months,$years);
+        $tempDate = date_create($years."-".$months);
+        $jumlahPenjualan = DB::select('
+            SELECT harga*unit/100 as total
+            FROM penjualan 
+            WHERE MONTH(tanggal_penjualan) = MONTH(?) 
+            AND YEAR(tanggal_penjualan) = YEAR(?)
+            AND karyawan_id_karyawan = (?)
+        ', [$tempDate, $tempDate, $id_karyawan]);
+
+        // dd($jumlahPenjualan);
+        // dd(array_sum(array_column($jumlahPenjualan, 'total')));
+
+        return array_sum(array_column($jumlahPenjualan, 'total'));
+       
+    }
 
     // public function get_absen_penghargaan($day)
     // {

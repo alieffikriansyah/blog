@@ -53,6 +53,7 @@
                             <th>Gaji Pokok</th>
                             <th>Bonus Gaji</th>
                             <th>Gaji Total</th>
+                            <th>Bonus Penjualan</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -72,6 +73,7 @@
                             <td>{{number_format($hasil->karyawan->gaji_pokok)}}</td>
                             <td>{{number_format(round($hasil->bonusGaji,0))}}</td>
                             <td>{{$hasil->gajiTotal}}</td>
+                            <td>{{$hasil->nilaiBonusPenjualan}}</td>
                         </tr>
                         @php $i++; @endphp
                         @endforeach
