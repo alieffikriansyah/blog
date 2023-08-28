@@ -6,6 +6,7 @@ use App\absensi;
 use App\penilaian;
 use App\formPenilaian;
 use App\karyawan;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use stdClass;
@@ -45,7 +46,7 @@ class PenilaianController extends Controller
             array_push($arrTimes, $tempDate->format('Y-m-d'));
 
             $absen = DB::select('
-                SELECT nama_form_penilaian, nama, id_penilaian, waktu_penilaian, periode_penilaian, nilai_skor, nama_penilai
+                SELECT nama_form_penilaian, karyawan_id_karyawan, id_penilaian, waktu_penilaian, periode_penilaian, nilai_skor, nama_penilai
                 FROM penilaian
                 INNER JOIN karyawan ON penilaian.karyawan_id_karyawan = karyawan.id_karyawan
                 INNER JOIN form_penilaian ON penilaian.form_penilaian_idtable1  = form_penilaian.idform_penilaian
@@ -263,7 +264,7 @@ class PenilaianController extends Controller
     public function ubah_penilaian_nilai(Request $request)
     {
         $requestBody = explode('&', $request->getContent());
-
+        // dd($requestBody);
         $result = 0;
 
         foreach ($requestBody as $key) {

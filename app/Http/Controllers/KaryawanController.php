@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\DB;
 use App\karyawan;
 use App\departemen;
 use App\jabatan;
+use App\User;
+use Auth;
 
 class KaryawanController extends Controller
 {
@@ -20,7 +22,11 @@ class KaryawanController extends Controller
     {
         $request->user();
         
-        $karyawan = Karyawan::all();
+        if(!Auth::user()->karyawan){
+            $karyawan = Karyawan::all();
+        } else {
+            $karyawan =  karyawan::where('user_id_user', Auth::user()->id)->get();
+        }
         $departemen = Departemen::all();
         $jabatan = Jabatan::all();
 
@@ -31,22 +37,26 @@ class KaryawanController extends Controller
     {
         DB::beginTransaction();
         try {
+            $user = new User();
+            $user->email = $request->email;
+            $user->name = $request->nama;
+            $user->password = bcrypt($request->password);
+            $user->save();
+
             $karyawan = new Karyawan();
-            $karyawan->nama = $request->nama;
-            $karyawan->username = $request->username;
-            $karyawan->password = $request->password;
+            $karyawan->user_id_user = $user->id;
             $karyawan->departemen_id_departemen = $request->departemen;
             $karyawan->jabatan_id_jabatan= $request->jabatan;
             $karyawan->alamat = $request->alamat;
             $karyawan->no_hp = $request->no_hp;
             $karyawan->gaji_pokok = $request->gaji_pokok;
+
             if ($request->status) {
                 $karyawan->status_karyawan = 'Aktif';
             } else {
                 $karyawan->status_karyawan = 'Nonaktif';
             }
 
-            $karyawan->hash = 'DEFAULT_HASH';
             $karyawan->save();
 
             DB::commit();
@@ -71,6 +81,8 @@ class KaryawanController extends Controller
         $jabatan = Jabatan::all();
         $arr['jabatan'] = $jabatan;
 
+       
+
         echo json_encode($arr);
 
         exit;
@@ -86,14 +98,15 @@ class KaryawanController extends Controller
             // $karyawan = Schema::getColumnListing("karyawan");
             // $dbname = DB::connection()->getDatabaseName();
             // $karyawan = Karyawan::where('id_karyawan', $request->id_karyawan); 
+
             $karyawan = Karyawan::find($request->id_karyawan);
+            $user = User::find($karyawan->user_id_user);
 
-            // dd($karyawan);
+            // dd($user);
 
-
-            $karyawan->nama = $request->nama_ubah;
-            $karyawan->username = $request->username_ubah;
-            $karyawan->password = $request->password_ubah;
+            $user->email = $request->email_ubah;
+            $user->name = $request->nama_ubah;
+            $user->password = bcrypt($request->password_ubah);
             $karyawan->departemen_id_departemen = $request->departemen_ubah;
             $karyawan->jabatan_id_jabatan= $request->jabatan_ubah;
 
@@ -105,6 +118,7 @@ class KaryawanController extends Controller
             } else {
                 $karyawan->status_karyawan = 'Nonaktif';
             }
+            $user->save();
             $karyawan->save();
 
             DB::commit();

@@ -29,7 +29,7 @@
               {{-- <div class="brand-logo">
                 <img src="asset/images/logo-dark.svg" alt="logo">
               </div> --}}
-              <h4>Login Admin Syafana Jaya Motor</h4>
+              <h4>Login Syafana Jaya Motor</h4>
               <h6 class="font-weight-light">Tolong Masukkan Email dan Password</h6>
               <form class="pt-3" method="POST" action="{{ route('login') }}">
                         @csrf
@@ -75,9 +75,6 @@
                     <i class="typcn typcn-social-facebook mr-2"></i>Connect using facebook
                   </button>
                 </div> --}}
-                <div class="text-center mt-4 font-weight-light">
-                  Don't have an account? <a href="{{ route('register') }}" class="text-primary">Create</a>
-                </div>
               </form>
             </div>
           </div>

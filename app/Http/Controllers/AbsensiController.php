@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\absensi;
 use App\karyawan;
+use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -38,14 +39,20 @@ class AbsensiController extends Controller
             array_push($arrDays, date_format($tempDate, "l, jS F Y"));
             array_push($arrTimes, $tempDate->format('Y-m-d'));
 
-            $absen = DB::select('
-                SELECT karyawan_id_karyawan, nama, tipe_absensi
-                FROM absensi 
-                INNER JOIN karyawan ON absensi.karyawan_id_karyawan = karyawan.id_karyawan
-                WHERE DAY(tanggaldanwaktu_absensi) = DAY(?) 
-                AND MONTH(tanggaldanwaktu_absensi) = MONTH(?) 
-                AND YEAR(tanggaldanwaktu_absensi) = YEAR(?)
-            ', [$tempDate, $tempDate, $tempDate]);
+            $query = '
+            SELECT karyawan_id_karyawan, tipe_absensi, user_id_user
+            FROM absensi 
+            INNER JOIN karyawan ON absensi.karyawan_id_karyawan = karyawan.id_karyawan
+            WHERE DAY(tanggaldanwaktu_absensi) = DAY(?) 
+            AND MONTH(tanggaldanwaktu_absensi) = MONTH(?) 
+            AND YEAR(tanggaldanwaktu_absensi) = YEAR(?)
+        ';
+
+        if(Auth::user()->karyawan){
+            $query .= ' AND karyawan.user_id_user = ' . Auth::user()->id;
+        }
+
+            $absen = DB::select(($query), [$tempDate, $tempDate, $tempDate]);
 
             array_push($allAbsenPerDay, $absen);
         }
@@ -91,19 +98,25 @@ class AbsensiController extends Controller
         $arrTimes = [];
         $allAbsenPerDay = [];
 
-        for ($i = 1; $i <= $days_in_month; $i++) {
+       for ($i = 1; $i <= $days_in_month; $i++) {
             $tempDate = date_create($years . "-" . $months . "-" . $i);
             array_push($arrDays, date_format($tempDate, "l, jS F Y"));
             array_push($arrTimes, $tempDate->format('Y-m-d'));
 
-            $absen = DB::select('
-                SELECT karyawan_id_karyawan, nama, tipe_absensi
-                FROM absensi 
-                INNER JOIN karyawan ON absensi.karyawan_id_karyawan = karyawan.id_karyawan
-                WHERE DAY(tanggaldanwaktu_absensi) = DAY(?) 
-                AND MONTH(tanggaldanwaktu_absensi) = MONTH(?) 
-                AND YEAR(tanggaldanwaktu_absensi) = YEAR(?)
-            ', [$tempDate, $tempDate, $tempDate]);
+            $query = '
+            SELECT karyawan_id_karyawan, tipe_absensi, user_id_user
+            FROM absensi 
+            INNER JOIN karyawan ON absensi.karyawan_id_karyawan = karyawan.id_karyawan
+            WHERE DAY(tanggaldanwaktu_absensi) = DAY(?) 
+            AND MONTH(tanggaldanwaktu_absensi) = MONTH(?) 
+            AND YEAR(tanggaldanwaktu_absensi) = YEAR(?)
+        ';
+
+        if(Auth::user()->karyawan){
+            $query .= ' AND karyawan.user_id_user = ' . Auth::user()->id;
+        }
+
+            $absen = DB::select(($query), [$tempDate, $tempDate, $tempDate]);
 
             array_push($allAbsenPerDay, $absen);
         }
@@ -152,8 +165,7 @@ class AbsensiController extends Controller
         exit;
     }
 
-
-    public function get_absen_absensi($day)
+    public function get_log_absensi($day)
     {
         $time = strtotime($day);
         $time = date('Y-m-d', $time);
@@ -161,11 +173,39 @@ class AbsensiController extends Controller
         $absen_todays = DB::select('
             SELECT *
             FROM absensi 
-            INNER JOIN karyawan ON absensi.karyawan_id_karyawan = karyawan.id_karyawan
+            LEFT JOIN karyawan ON absensi.karyawan_id_karyawan = karyawan.id_karyawan
+            INNER JOIN users ON karyawan.user_id_user = users.id
             WHERE DAY(tanggaldanwaktu_absensi) = DAY(?) 
             AND MONTH(tanggaldanwaktu_absensi) = MONTH(?) 
             AND YEAR(tanggaldanwaktu_absensi) = YEAR(?)
         ', [$time, $time, $time]);
+
+        echo json_encode($absen_todays);
+
+        exit;
+    }
+
+
+    public function get_absen_absensi($day)
+    {
+        $time = strtotime($day);
+        $time = date('Y-m-d', $time);
+
+        $query = '
+        SELECT *
+        FROM absensi 
+        INNER JOIN karyawan ON absensi.karyawan_id_karyawan = karyawan.id_karyawan
+        INNER JOIN users ON karyawan.user_id_user = users.id
+        WHERE DAY(tanggaldanwaktu_absensi) = DAY(?) 
+        AND MONTH(tanggaldanwaktu_absensi) = MONTH(?) 
+        AND YEAR(tanggaldanwaktu_absensi) = YEAR(?)
+    ';
+
+        if(Auth::user()->karyawan){
+            $query .= ' AND WHERE users.id = ' . Auth::user()->id;
+        }
+
+        $absen_todays = DB::select(($query), [$time, $time, $time]);
         echo json_encode($absen_todays);
 
         exit;

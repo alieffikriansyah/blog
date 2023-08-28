@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\pengajuanCuti;
 use App\karyawan;
 use App\Absensi;
+use Auth;
 use Illuminate\Support\Facades\DB;
 
 class PengajuanCutiController extends Controller
@@ -19,6 +20,13 @@ class PengajuanCutiController extends Controller
     {
         // $request->user()->authorizeRoles(['superadmin', 'admin']);
         $request->user();
+
+        // if(Auth::user()->karyawan){
+        //     $karyawanId = Auth::user()->karyawan->id;
+        //     $PengajuanCuti = pengajuanCuti::where('karyawan_id_karyawan', $karyawanId)->get();
+        // } else {
+        //     $PengajuanCuti = pengajuanCuti::all();
+        // }
 
         $PengajuanCuti = pengajuanCuti::all();
         $karyawan = karyawan::all();
@@ -59,7 +67,9 @@ class PengajuanCutiController extends Controller
 
     public function pengajuanCutiWithDate(Request $request)
     {
-        $request->user()->authorizeRoles(['superadmin', 'admin']);
+        // $request->user()->authorizeRoles(['superadmin', 'admin']);
+        $request->user();
+        // dd($request);
 
         $paths = explode('-', $request->query('date'));
 
@@ -91,17 +101,34 @@ class PengajuanCutiController extends Controller
         array_push($arrDays, date_format($tempDate, "l, jS F Y"));
         array_push($arrTimes, $tempDate->format('Y-m-d'));
 
-        $cutiPerMonth = DB::select('
-            SELECT idpengajuan_cuti ,karyawan_id_karyawan, nama, tanggal_cuti, keterangan_cuti, status_cuti
-            FROM pengajuan_cuti
-            INNER JOIN karyawan ON pengajuan_cuti.karyawan_id_karyawan = karyawan.id_karyawan
-            AND MONTH(tanggal_cuti) = MONTH(?) 
-            AND YEAR(tanggal_cuti) = YEAR(?)
-        ', [$tempDate, $tempDate]);
+         if(Auth::user()->karyawan){
+            $karyawanId = Auth::user()->karyawan->id_karyawan;
+            // dd(Auth::user()->karyawan->id_karyawan);
+            $cutiPerMonth = DB::select('
+                SELECT idpengajuan_cuti ,karyawan_id_karyawan, name, tanggal_mulai_cuti, keterangan_cuti, status_cuti
+                FROM pengajuan_cuti
+                INNER JOIN karyawan ON pengajuan_cuti.karyawan_id_karyawan = karyawan.id_karyawan
+                INNER JOIN users ON karyawan.user_id_user = users.id
+                WHERE pengajuan_cuti.karyawan_id_karyawan = ?
+                AND MONTH(tanggal_mulai_cuti) = MONTH(?) 
+                AND YEAR(tanggal_mulai_cuti) = YEAR(?)
+            ', [$karyawanId, $tempDate, $tempDate]);
+            // dd($cutiPerMonth);
+        } else {
+            $cutiPerMonth = DB::select('
+                SELECT idpengajuan_cuti ,karyawan_id_karyawan, name, tanggal_mulai_cuti, keterangan_cuti, status_cuti
+                FROM pengajuan_cuti
+                INNER JOIN karyawan ON pengajuan_cuti.karyawan_id_karyawan = karyawan.id_karyawan
+                INNER JOIN users ON karyawan.user_id_user = users.id
+                WHERE MONTH(tanggal_mulai_cuti) = MONTH(?) 
+                AND YEAR(tanggal_mulai_cuti) = YEAR(?)
+            ', [$tempDate, $tempDate]);
+            // dd($cutiPerMonth);
+        }
 
         // var_dump($cutiPerMonth);
 
-        return view('pengajuanCutis', compact('PengajuanCuti', 'days_in_month', 'months', 'years', 'arrDays', 'arrTimes', 'cutiPerMonth', 'karyawan'));
+        return view('pengajuanCuti', compact('PengajuanCuti', 'days_in_month', 'months', 'years', 'arrDays', 'arrTimes', 'cutiPerMonth', 'karyawan'));
     }
 
     public function tambah_pengajuanCuti(Request $request)

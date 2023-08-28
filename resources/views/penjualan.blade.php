@@ -4,7 +4,7 @@
 <div class="col-lg grid-margin stretch-card">
     <div class="card">
       <div class="card-body">
-        <h4 class="card-title">Sanksi</h4>
+        <h4 class="card-title">Penjualan</h4>
         <p class="card-description">
           Add class <code>.table-hover</code>
         </p>
@@ -19,24 +19,30 @@
                 <tr>
                     <th style="width:5px;">No</th>
                     <th>Nama Karyawan</th>
-                    <th>Tanggal Sanksi</th>
-                    <th>Keterangan Sanksi</th>
+                    <th>Jenis Mobil</th>
+                    <th>Merk</th>
+                    <th>Unit</th>
+                    <th>Harga</th>
+                    <th>Tanggal Penjualan</th>
         @if (!Auth::user()->karyawan)
         <th style="text-align:center;">Action</th>
         @endif
                 </tr>
             </thead>
                 @php $i=1; @endphp
-                @foreach($sanksi as $sank)
+                @foreach($penjualan as $penj)
                 <tr>
                     <td>{{$i}}</td>
-                    <td>{{$sank->karyawan->user->name}}</td>
-                    <td>{{$sank->waktu_sanksi}}</td>
-                    <td>{{$sank->keterangan_sanksi}}</td>
+                    <td>{{$penj->karyawan->user->name}}</td>
+                    <td>{{$penj->jenis_mobil}}</td>
+                    <td>{{$penj->merk}}</td>
+                    <td>{{$penj->unit}}</td>
+                    <td>{{$penj->harga}}</td>
+                    <td>{{$penj->tanggal_penjualan}}</td>
         @if (!Auth::user()->karyawan)
         <td style="text-align:center;">
-                    <button type="button"  class="btn btn-warning waves-effect waves-light btn-edit" data-toggle="modal" data-target="#modalubah" data-id="{{$sank->id_sanksi}}"> Ubah</button>
-                    <button type="button"  class="btn btn-danger waves-effect waves-light btn-delete" data-id="{{$sank->id_sanksi}}"> Hapus</button>
+                    <button type="button"  class="btn btn-warning waves-effect waves-light btn-edit" data-toggle="modal" data-target="#modalubah" data-id="{{$penj->id_penjualan}}"> Ubah</button>
+                    <button type="button"  class="btn btn-danger waves-effect waves-light btn-delete" data-id="{{$penj->id_penjualan}}"> Hapus</button>
                     </td>
                 </tr>
         @endif
@@ -53,17 +59,17 @@
     <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
-        <h5 class="modal-title">Tambah Data Sanksi Baru</h5>
+        <h5 class="modal-title">Tambah Data Penjualan Baru</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
         </div>
         <div class="modal-body">
-            <form method="POST" name="tbhSanksi" action="{{ route('sanksi.tambah') }}">
+            <form method="POST" name="tbhPenjualan" action="{{ route('penjualan.tambah') }}">
                 {{ csrf_field() }}
                 <!-- karyawan -->
                 <div class="form-group">
-                    <label>Karyawan<span style="color: #ff5252;">*</span></label>
+                    <label>Karyawan yang menjual<span style="color: #ff5252;">*</span></label>
                     <select class="form-control" name="karyawan" required>
                         @foreach ($karyawan as $d)
                             <option value="{{ $d->id_karyawan }}">{{ $d->user->name }}</option>
@@ -72,20 +78,33 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="input-1">Tanggal Sanksi<span style="color: #ff5252;">*</span></label>
-                    <input type="datetime-local" class="form-control" id="input-1" required name="waktu_sanksi" placeholder="yyyy-mm-dd">
+                    <label for="input-1">Tanggal Penjualan<span style="color: #ff5252;">*</span></label>
+                    <input type="datetime-local" class="form-control" id="input-1" required name="tanggal_penjualan" placeholder="yyyy-mm-dd">
                 </div>
 
                 <div class="form-group">
-                    <label for="input-2">Keterangan Sanksi<span style="color: #ff5252;">*</span></label>
-                    <input type="text" class="form-control" id="input-2" required name="keterangan_sanksi" placeholder="Keterangan Sanksi....">
+                    <label for="input-2">Jenis Mobil<span style="color: #ff5252;">*</span></label>
+                    <input type="text" class="form-control" id="input-2" required name="jenis_mobil" placeholder="jenis mobil....">
                 </div>
 
-                
+                <div class="form-group">
+                    <label for="input-2">Merk<span style="color: #ff5252;">*</span></label>
+                    <input type="text" class="form-control" id="input-2" required name="merk" placeholder="merk....">
+                </div>
+
+                <div class="form-group">
+                    <label for="input-2">Harga<span style="color: #ff5252;">*</span></label>
+                    <input type="text" class="form-control" id="input-2" required name="harga" placeholder="harga....">
+                </div>
+
+                <div class="form-group">
+                    <label for="input-2">Unit<span style="color: #ff5252;">*</span></label>
+                    <input type="number" class="form-control" id="input-2" required name="unit" placeholder="unit....">
+                </div>                
 
                 <small style="color: #ff5252;">* Wajib Diisi</small>
                 <div class="btn-group float-sm-right mt-2">
-                    <button onclick="validateForm('ubhSanksi','waktu_sanksi', 'keterangan_sanksi')" type="submit" class="btn btn-success px-5">Simpan</button>
+                    <button onclick="validateForm('tbhPenjual','tanggal_penjualan', 'jenis_mobil','merk','harga','unit')" type="submit" class="btn btn-success px-5">Simpan</button>
                 </div>
             </form>
         </div>
@@ -97,13 +116,13 @@
     <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
-        <h5 class="modal-title">Ubah Data Sanksi</h5>
+        <h5 class="modal-title">Ubah Data penjualan</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
         </div>
         <div class="modal-body">
-            <form method="POST" name="ubhSanksi" action="{{ route('sanksi.ubah') }}">
+            <form method="POST" name="ubhPenjualan" action="{{ route('penjualan.ubah') }}">
                 {{ csrf_field() }}
                 <div class="form-group">
                     <label>Karyawan<span style="color: #ff5252;">*</span></label>
@@ -112,20 +131,32 @@
                         </select>
                 </div>
         
+                <input type="hidden" name="id_penjualan_ubah">
                 <div class="form-group">
-                    <label for="input-11">Waktu Sanksi<span style="color: #ff5252;">*</span></label>
-                    <input type="datetime-local" class="form-control" required id="input-11" name="waktu_sanksi_ubah" placeholder="yyyy-mm-dd">
+                    <label for="input-11">Tanggal Penjualan<span style="color: #ff5252;">*</span></label>
+                    <input type="datetime-local" class="form-control" required id="input-11" name="tanggal_penjualan_ubah" placeholder="yyyy-mm-dd">
                 </div>
 
-                <input type="hidden" name="id_sanksi_ubah">
                 <div class="form-group">
-                    <label for="input-12">Keterangan Sanksi<span style="color: #ff5252;">*</span></label>
-                    <input type="text" class="form-control" required id="input-12" name="keterangan_sanksi_ubah" placeholder="Keterangan Sanksi....">
+                    <label for="input-12">Jenis Mobil<span style="color: #ff5252;">*</span></label>
+                    <input type="text" class="form-control" required id="input-12" name="jenis_mobil_ubah" placeholder="jenis mobil....">
+                </div>
+                <div class="form-group">
+                    <label for="input-12">Merk<span style="color: #ff5252;">*</span></label>
+                    <input type="text" class="form-control" required id="input-12" name="merk_ubah" placeholder="merk....">
+                </div>
+                <div class="form-group">
+                    <label for="input-12">Unit<span style="color: #ff5252;">*</span></label>
+                    <input type="text" class="form-control" required id="input-12" name="unit_ubah" placeholder="unit....">
+                </div>
+                <div class="form-group">
+                    <label for="input-12">Harga<span style="color: #ff5252;">*</span></label>
+                    <input type="text" class="form-control" required id="input-12" name="harga_ubah" placeholder="harga....">
                 </div>
                 
                 <small style="color: #ff5252;">* Wajib Diisi</small>
                 <div class="btn-group float-sm-right mt-2">
-                    <button onclick="validateForm('ubhSanksi', 'waktu_sanksi_ubah','keterangan_sanksi_ubah')" type="submit" class="btn btn-warning px-5">Ubah</button>
+                    <button onclick="validateForm('ubhPenjualan', 'tanggal_penjualan_ubah','jenis_mobil_ubah','merk_ubah','unit_ubah','harga_ubah')" type="submit" class="btn btn-warning px-5">Ubah</button>
                 </div>
             </form>
         </div>
@@ -203,16 +234,20 @@ $(document).ready(function() {
 
     }
 
-    function ubah($id_sanksi) {
+    function ubah($id_penjualan) {
         $.ajax({
-            url: "{{ url('get_ubah_sanksi') }}/"+$id_sanksi,
+            url: "{{ url('get_ubah_penjualan') }}/"+$id_penjualan,
             type: 'get',
             dataType: 'json',
             success: function(res){
-                $('input[name*="id_sanksi_ubah"]').val(res['id_sanksi']);
-                $('input[name*="keterangan_sanksi_ubah"]').val(res['keterangan_sanksi']);
-                $('input[name*="waktu_sanksi_ubah"]').val(res['waktu_sanksi']);
+                $('input[name*="id_penjualan_ubah"]').val(res['id_penjualan']);
+                $('input[name*="jenis_mobil_ubah"]').val(res['jenis_mobil']);
+                $('input[name*="merk_ubah"]').val(res['merk']);
+                $('input[name*="unit_ubah"]').val(res['unit']);
+                $('input[name*="harga_ubah"]').val(res['harga']);
+                $('input[name*="tanggal_penjualan_ubah"]').val(res['tanggal_penjualan']);
                 $('select[name*="karyawan_ubah"]').html('');
+                
                 for (let $i=0; $i<res['karyawan'].length; $i++) {
                     for (let $j=0; $j<res['user'].length; $j++) {
                         if(res['karyawan'][$i]['user_id_user']==res['user'][$j]['id']){
@@ -234,7 +269,7 @@ $(document).ready(function() {
     // alert('ok');
     });
 });
-function hapus($id_sanksi){
+function hapus($id_penjualan){
     swal({ 
     title: "Apakah anda yakin?",
     text: "Setelah dihapus, Anda tidak akan dapat memulihkan data ini!",
@@ -243,7 +278,7 @@ function hapus($id_sanksi){
     dangerMode: true,
     }).then((willDelete) => {
         if (willDelete) {
-            window.location.href="{{url('hapus_sanksi')}}/"+$id_sanksi;
+            window.location.href="{{url('hapus_penjualan')}}/"+$id_penjualan;
             pageloader();
         } 
     });

@@ -47,24 +47,28 @@
                             <th>Tanggal Selesai Pengajuan Cuti</th>
                             <th>Keterangan Cuti</th>
                             <th>Status Cuti</th>
-                            <th style="text-align:center;">Action</th>
+                                    @if (!Auth::user()->karyawan)
+                                    <th style="text-align:center;">Action</th>
+                                    @endif
                         </tr>
                     </thead>
                     <tbody>
                         @php $i=1; @endphp
-                        @foreach($PengajuanCuti as $cuti)
+                        @foreach($cutiPerMonth as $cuti)
                         <tr>
                             <td>{{$i}}</td>
-                            <td>{{$cuti->karyawan->nama}}</td>
+                            <td>{{$cuti->name}}</td>
                             <td>{{$cuti->tanggal_mulai_cuti}}</td>
                             <td>{{$cuti->tanggal_mulai_cuti}}</td>
                             <td>{{$cuti->keterangan_cuti}}</td>
                             <td>{{$cuti->status_cuti}}</td>
-                            <td style="text-align:center;">
+                                    @if (!Auth::user()->karyawan)
+                                    <td style="text-align:center;">
                             <button type="button" onclick="terima('{{ $cuti->idpengajuan_cuti }}')" class="btn btn-success waves-effect waves-light"> <i class="fa fa-edit"></i> Terima</button>
                             <button type="button" onclick="tolak('{{ $cuti->idpengajuan_cuti }}')" class="btn btn-danger waves-effect waves-light"> <i class="fa fa-edit"></i> Tolak</button>
                             <!-- <button type="button" onclick="getAbsen('{{ $i }}')" class="btn btn-warning waves-effect waves-light" data-toggle="modal" data-target="#modalabsen"> <i class="fa fa-edit"></i> Update</button> -->
                             </td>
+                            @endif
                         </tr>
                         @php $i++; @endphp
                         @endforeach
@@ -146,7 +150,7 @@
                     <label>Karyawan<span style="color: #ff5252;">*</span></label>
                     <select class="form-control" name="karyawan" required>
                         @foreach ($karyawan as $d)
-                            <option value="{{ $d->id_karyawan }}">{{ $d->nama }}</option>
+                            <option value="{{ $d->id_karyawan }}">{{ $d->user->name }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -462,7 +466,7 @@
         });
     }
 
-    function changePage(){
+    function changePage() {
         var $year = $('#year').find(":selected").val();
         var month = $('#month').find(":selected").val();
         // console.log('DEBUGGG >>', $year, month);
@@ -474,11 +478,10 @@
                 date: `${$year}-${month}`,
             },
             type: 'get',
-            success: function(res){
+            success: function (res) {
                 console.log('sucess = ', this.url);
-                window.location.href=this.url;
-                pageloader();
-            }
+                window.location.href = this.url;
+                pageloader();            }
         });
     }
 </script>

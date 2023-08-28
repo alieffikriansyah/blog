@@ -58,7 +58,7 @@
                         @if (isset($p->karyawan))
                         <tr>
                             <td>{{$i}}</td>
-                            <td>{{$p->karyawan->nama}}</td>
+                            <td>{{$p->karyawan->user->name}}</td>
                             <td>{{$p->karyawan->departemen->nama_departemen}}</td>
                             <td>{{$p->karyawan->jabatan->nama_jabatan}}</td>
                             <td>{{$p->formPenilaian->nama_form_penilaian}}</td>
@@ -134,8 +134,8 @@
                         <label>Karyawan<span style="color: #ff5252;">*</span></label>
                         <select class="form-control" name="karyawan" required>
                             @foreach ($karyawan as $d)
-                            <option value="{{ $d->id_karyawan }}">{{ $d->nama_departemen }} - {{ $d->nama_jabatan }} -
-                                {{ $d->nama }}</option>
+                            <option value="{{ $d->id_karyawan }}">{{ $d->nama_departemen }}  {{ $d->nama_jabatan }} 
+                                {{ $d->user->name }}  </option>
                             @endforeach
                         </select>
                     </div>
@@ -155,8 +155,8 @@
 
                     <div class="form-group">
                         <label for="input-11">Nama Penilai<span style="color: #ff5252;">*</span></label>
-                        <input type="text" class="form-control" id="input-12" required name="nama_penilai"
-                            placeholder="Nama Penilai...." value="Admin">
+                        <input type="text" class="form-control" id="input-12"  name="nama_penilai"
+                            placeholder="Nama Penilai...." value="Admin"  required readonly>
                     </div>
 
                     <div class="form-group">

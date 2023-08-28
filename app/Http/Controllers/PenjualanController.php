@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\sanksi;
+
 use App\karyawan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\User;
+use App\penjualan;
 use Auth;
 
-class SanksiController extends Controller
+class PenjualanController extends Controller
 {
     public function __construct()
     {
@@ -17,27 +18,29 @@ class SanksiController extends Controller
     }
 
 
-    public function sanksi(Request $request)
+    public function penjualan(Request $request)
     {
         // $request->user()->authorizeRoles(['superadmin', 'admin']);
         $request->user();
-      
+
+        // dd($request);
+
         $karyawan = Karyawan::all();
 
-        if(Auth::user()->karyawan ){
-            $sanksi = [];
-            foreach(Sanksi::all() as $item){
-                if($item->karyawan->user_id_user == 1 ){
-                    $sanksi[] = $item;
+        if(Auth::user()->karyawan){
+            $penjualan = [];
+            foreach(Penjualan::get() as $item){
+                if($item->karyawan->user_id_user == 1){
+                    $penjualan[] = $item;
                 }
             }
         } else {
-            $sanksi = Sanksi::all();
+            $penjualan = Penjualan::all();
         }
         
-      
 
-        return view('sanksi', compact('sanksi', 'karyawan'));
+
+        return view('penjualan', compact('penjualan', 'karyawan'));
      
     }
     
@@ -108,14 +111,17 @@ class SanksiController extends Controller
     // }
         
 
-    public function tambah_sanksi(Request $request)
+    public function tambah_penjualan(Request $request)
     {
         DB::beginTransaction();
         try {
-            $sanksi = new Sanksi();
-            $sanksi->keterangan_sanksi = $request->keterangan_sanksi;
-            $sanksi->waktu_sanksi = $request->waktu_sanksi;
-            $sanksi->karyawan_id_karyawan = $request->karyawan;
+            $penjualan = new Penjualan();
+            $penjualan->merk = $request->merk;
+            $penjualan->jenis_mobil = $request->jenis_mobil;
+            $penjualan->harga = $request->harga;
+            $penjualan->unit = $request->unit;
+            $penjualan->tanggal_penjualan = $request->tanggal_penjualan;
+            $sanksi->karyawan_id_karyawan = $request->karyawan->user->name;
 
             $sanksi->save();
 
@@ -126,31 +132,33 @@ class SanksiController extends Controller
             return back()->with('error', 'Oops Sepertinya ada masalah pada sistem\n\nPesan error: '.$e);
         }
     }
-    public function get_ubah_sanksi($id_sanksi)
+    public function get_ubah_penjualan($id_penjualan)
     {
 
-        $sanksi = Sanksi::find($id_sanksi);
-        $arr = json_decode($sanksi, true);
+        $penjualan = Penjualan::find($id_penjualan);
+        $arr = json_decode($penjualan, true);
         
         $user = user::all();
         $arr ['user'] =$user;
-
+        
         $karyawan = Karyawan::all();
-        // $karyawan =  karyawan::where('user_id_user', User::find($name))->get();
         $arr['karyawan'] = $karyawan;
 
         echo json_encode($arr);
 
         exit;
     }
-    public function ubah_sanksi(Request $request)
+    public function ubah_penjualan(Request $request)
     {
     //   dd($request);
         DB::beginTransaction();
         try {
-            $sanksi = Sanksi::find($request->id_sanksi_ubah);
-            $sanksi->keterangan_sanksi = $request->keterangan_sanksi_ubah;
-            $sanksi->waktu_sanksi = $request->waktu_sanksi_ubah;
+            $penjualan = Penjualan::find($request->id_penjualan_ubah);
+            $penjualan->merk = $request->merk_ubah;
+            $sanksi->jenis_mobil= $request->jenis_mobil_ubah;
+            $sanksi->harga= $request->harga_ubah;
+            $sanksi->unit= $request->unit_ubah;
+            $sanksi->tanggal_penjualan = $request->tanggal_penjuaalan_ubah;
             $sanksi->karyawan_id_karyawan = $request->karyawan_ubah;
 
             $sanksi->save();
@@ -162,11 +170,11 @@ class SanksiController extends Controller
             return back()->with('error', 'Oops Sepertinya ada masalah pada sistem\n\nPesan error: '.$e);
         }
         }
-    public function hapus_sanksi($id_sanksi)
+    public function hapus_penjualan($id_penjualan)
     {
         DB::beginTransaction();
         try {
-            Sanksi::find($id_sanksi)->delete();
+            Sanksi::find($id_penjualan)->delete();
             
             DB::commit();
             return back()->with('success', 'Sanksi telah berhasil dihapus'); 

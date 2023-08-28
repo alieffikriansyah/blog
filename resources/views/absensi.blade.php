@@ -85,6 +85,13 @@
                                 class="btn btn-success waves-effect waves-light m-1" data-toggle="modal"
                                 data-target="#modaltambah"> <i class="fa fa fa-plus"></i> Tambah</button>
                         </div>
+                        @if (!Auth::user()->karyawan)
+                        <div class="btn-group float-sm-right">
+                            <button id="button-log-absen" type="button"  data-day="{{$day}}" 
+                                class="btn btn-info waves-effect waves-light m-1" data-toggle="modal"
+                                data-target="#modallog"> <i class="fa fa fa-plus"></i> Log Absen</button>
+                        </div>
+                        @endif
                     </div>
                 </div>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -141,7 +148,7 @@
                         <label>Karyawan<span style="color: #ff5252;">*</span></label>
                         <select class="form-control" name="karyawan" required>
                             @foreach ($karyawan as $d)
-                            <option value="{{ $d->id_karyawan }}">{{ $d->nama }}</option>
+                            <option value="{{ $d->id_karyawan }}">{{ $d->user->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -165,8 +172,7 @@
 
                     <div class="form-group">
                         <label for="input-1">Tanggal dan Waktu Absensi<span style="color: #ff5252;">*</span></label>
-                        <input type="text" class="form-control" id="input-1" required readonly
-                            name="tanggaldanwaktu_absensi" placeholder="yyyy-mm-dd hh:mm:ss">
+                        <input type="datetime-local" id="input-1" name="tanggaldanwaktu_absensi" class="form-control" value="<?php echo (new DateTime('now', new DateTimeZone('Asia/Jakarta')))->format('Y-m-d\TH:i'); ?>" required readonly>
                     </div>
 
                     <div class="form-group">
@@ -257,6 +263,49 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="modallog">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Log Kehadiran</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form >
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table id="default-datatable-log" class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>Nama Karyawan</th>
+                                                    <th>Status Kehadiran</th>
+                                                    <th>Tanggal & Waktu kehadiran</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <!-- HOW TO MAKE THIS AJAX -->
+                                                <!-- WILL BE HANDLED AJAX DONE hehe -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{-- <div class="btn-group float-sm-right mt-2">
+                        <button onclick="validateForm('ubhPenilaian', 'karyawan', 'tanggaldanwaktu_absensi ')" type="submit"
+                            class="btn btn-success px-5">Update</button>
+                    </div> --}}
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- End Modal -->
 
 @endsection
@@ -312,8 +361,10 @@
     $(".btn-absen").each(function (index) {
         $(this).on("click", function () {
             getAbsen($(this).data('day'), $(this).data('arr'));
+            getLogAbsen($(this).data('day'), $(this).data('arr'));
         })
     });
+
 
     function getAbsen($day, $time) {
         $.ajax({
@@ -325,7 +376,7 @@
                 data.forEach(item => {
                     $('#default-datatable-absen tbody').append(
                         `<tr>
-                        <td>${item.nama}</td>
+                        <td>${item.name}</td>
                         <td>${item.tanggaldanwaktu_absensi}</td>
                         <td>${item.tipe_absensi}</td>
                         <td>${item.keterangan_absensi}</td>
@@ -342,18 +393,43 @@
                 console.log('day >>>>', $day);
                 var dateOffset = (24 * 60 * 60 * 1000) * 1; //1 days
                 const currentDate = new Date();
+                currentDate.setDate(currentDate.getDate() + 1);
                 currentDate.setTime(currentDate.getTime() - dateOffset);
                 const selectedDate = new Date($time);
                 console.log('currentDate >>>>', currentDate);
                 console.log('selectedDate >>>>', selectedDate);
+                console.log('Format >>>>', new Date(currentDate).toDateString());
 
-                if (selectedDate < currentDate) {
-                    console.log('test')
-                    $("#button-tambah-absen").attr("disabled", true);
-                } else {
+                if (new Date(currentDate).toDateString()
+ == new Date(selectedDate).toDateString()) {
                     $("#button-tambah-absen").attr("disabled", false);
+                } else {
+                    $("#button-tambah-absen").attr("disabled", true);
                 }
-                $('input[name*="tanggaldanwaktu_absensi"]').val($time);
+                console.log($time);
+            },
+            error: function (err) {
+                console.log('error', err);
+            }
+        });
+    }
+
+    function getLogAbsen($day, $time) {
+        $.ajax({
+            url: "{{ url('get_log_absensi') }}/" + $day,
+            type: 'get',
+            dataType: 'json',
+            success: function (data) {
+                $('#default-datatable-log tbody tr').remove();
+                data.forEach(item => {
+                    $('#default-datatable-log tbody').append(
+                        `<tr>
+                        <td>${item.name}</td>
+                        <td>${item.tipe_absensi}</td>
+                        <td>${item.tanggaldanwaktu_absensi}</td>
+                    </tr>`
+                    )
+                });
             },
             error: function (err) {
                 console.log('error', err);

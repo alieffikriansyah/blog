@@ -43,11 +43,13 @@ Route::get('absensi', 'AbsensiController@absensi')->name('absensi');
 Route::get('absensis', 'AbsensiController@absensiWithDate')->name('absensi.with.date');
 Route::post('tambah_absensi', 'AbsensiController@tambah_absensi')->name('absensi.tambah');
 Route::post('ubah_absensi', 'AbsensiController@ubah_absensi')->name('absensi.ubah');
+Route::get('get_log_absensi/{day}', 'AbsensiController@get_log_absensi')->name('absensi.log');
 Route::get('get_absen_absensi/{day}', 'AbsensiController@get_absen_absensi')->name('absensi.absen');
 Route::get('get_ubah_absensi/{id}', 'AbsensiController@get_ubah_absensi')->name('absensi.getubah');
 Route::get('hapus_absensi/{id}', 'AbsensiController@hapus_absensi')->name('absensi.hapus');
 
-Route::get('pengajuanCuti', 'PengajuanCutiController@pengajuanCuti')->name('pengajuanCuti');
+
+Route::get('pengajuanCuti', 'PengajuanCutiController@pengajuanCutiWithDate')->name('pengajuanCuti');
 Route::get('pengajuanCutis', 'PengajuanCutiController@pengajuanCutiWithDate')->name('pengajuanCuti.with.date');
 Route::post('tambah_pengajuanCuti', 'PengajuanCutiController@tambah_pengajuanCuti')->name('pengajuanCuti.tambah');
 Route::post('ubah_pengajuanCuti', 'PengajuanCutiController@ubah_pengajuanCuti')->name('pengajuanCuti.ubah');
@@ -62,6 +64,14 @@ Route::post('tambah_sanksi', 'SanksiController@tambah_sanksi')->name('sanksi.tam
 Route::post('ubah_sanksi', 'SanksiController@ubah_sanksi')->name('sanksi.ubah');
 Route::get('get_ubah_sanksi/{id}', 'SanksiController@get_ubah_sanksi')->name('sanksi.getubah');
 Route::get('hapus_sanksi/{id}', 'SanksiController@hapus_sanksi')->name('sanksi.hapus');
+
+Route::get('penjualan', 'PenjualanController@penjualan')->name('penjualan');
+// Route::get('sanksis', 'SanksiController@sanksiWithDate')->name('sanksi.with.date');
+Route::post('tambah_penjualan', 'PenjualanController@tambah_penjualan')->name('penjualan.tambah');
+Route::post('ubah_penjualan', 'PenjualanController@ubah_penjualan')->name('penjualan.ubah');
+Route::get('get_ubah_penjualan/{id}', 'PenjualanController@get_ubah_penjualan')->name('penjualan.getubah');
+Route::get('hapus_penjulan/{id}', 'PenjualanController@hapus_penjualan')->name('penjualan.hapus');
+
 
 Route::get('kriteria', 'KriteriaController@kriteria')->name('kriteria');
 Route::post('tambah_kriteria', 'KriteriaController@tambah_kriteria')->name('kriteria.tambah');
@@ -97,13 +107,14 @@ Route::get('get_ubah_penilaian/{id}', 'PenilaianController@get_ubah_penilaian')-
 Route::get('hapus_penilaian/{id}', 'PenilaianController@hapus_penilaian')->name('penilaian.hapus');
 Route::post('ubah_penilaian_nilai', 'PenilaianController@ubah_penilaian_nilai')->name('penilaian.ubahNilai');
 
-// Route::get('penghargaans', 'PenghargaanController@penghargaanWithDate')->name('penghargaan.with.date');
-// Route::get('penghargaan', 'PenghargaanController@penghargaan')->name('penghargaan');
-// Route::post('tambah_penghargaan', 'PenghargaanController@tambah_penghargaan')->name('penghargaan.tambah');
-// Route::post('ubah_penghargaan', 'PenghargaanController@ubah_penghargaan')->name('penghargaan.ubah');
-// Route::get('get_ubah_penghargaan/{id}', 'PenghargaanController@get_ubah_penghargaan')->name('penghargaan.getubah');
-// Route::get('hapus_penghargaan/{id}', 'PenghargaanController@hapus_penghargaan')->name('penghargaan.hapus');
-// Route::get('terima_penghargaan/{id}', 'PenghargaanController@terima_penghargaan')->name('penghargaan.terima');
-// Route::get('tolak_penghargaan/{id}', 'PenghargaanController@tolak_penghargaan')->name('penghargaan.tolak');
+
+Route::get('penghargaans', 'PenghargaanController@penghargaan')->name('penghargaan');
+Route::get('penghargaan', 'PenghargaanController@penghargaanWithDate')->name('penghargaanWithDate');
+Route::post('tambah_penghargaan', 'PenghargaanController@tambah_penghargaan')->name('penghargaan.tambah');
+Route::post('ubah_penghargaan', 'PenghargaanController@ubah_penghargaan')->name('penghargaan.ubah');
+Route::get('get_ubah_penghargaan/{id}', 'PenghargaanController@get_ubah_penghargaan')->name('penghargaan.getubah');
+Route::get('hapus_penghargaan/{id}', 'PenghargaanController@hapus_penghargaan')->name('penghargaan.hapus');
+Route::get('terima_penghargaan/{id}', 'PenghargaanController@terima_penghargaan')->name('penghargaan.terima');
+Route::get('tolak_penghargaan/{id}', 'PenghargaanController@tolak_penghargaan')->name('penghargaan.tolak');
 
 
