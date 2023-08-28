@@ -15,7 +15,7 @@
                 <select id="month" name="month">
                     <option value="">Select Month</option>
                     <?php
-                        $selected_month = date('m'); //current month
+                        $selected_month =$months; //current month
                         for ($i_month = 1; $i_month <= 12; $i_month++) { 
                             $selected = $selected_month == $i_month ? ' selected' : '';
                             echo '<option value="'.$i_month.'"'.$selected.'>('.$i_month.') '. date('F', mktime(0,0,0,$i_month)).'</option>'."\n";
@@ -28,7 +28,7 @@
                     <?php 
                     $year_start  = 1940;
                     $year_end = 2200; // current Year
-                    $selected_year = date('Y'); // current Year
+                    $selected_year = $years; // current Year
 
                     for ($i_year = $year_start; $i_year <= $year_end; $i_year++) {
                         $selected = $selected_year == $i_year ? ' selected' : '';
@@ -83,7 +83,7 @@
                         {{-- {{dd($penilaian)}} --}}
                         <tr>
                             <td>{{$i}}</td>
-                            <td>{{$p->nama}}</td>
+                            <td>{{$p->name}}</td>
                             <td>{{$p->nama_departemen}}</td>
                             <td>{{$p->nama_jabatan}}</td>
                             <td>{{$p->nama_form_penilaian}}</td>
@@ -607,7 +607,7 @@
         var $year = $('#year').find(":selected").val();
         var $month = $('#month').find(":selected").val();
         // console.log('DEBUGGG >>', $year, month);
-        var url = "{{ route('penilaian.with.date') }}";
+        var url = "{{ route('penilaian') }}";
 
         $.ajax({
             url,

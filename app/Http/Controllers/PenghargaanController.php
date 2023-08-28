@@ -64,22 +64,32 @@ class PenghargaanController extends Controller
     //     compact('penghargaans', 'days_in_month', 'months', 'years', 'arrDays', 'arrTimes', 'allAbsenPerDay', 'karyawan'));
     // }
 
-    public function penghargaan ()
+    public function penghargaan(Request $request)
     {
 
         // to get current month and year
+        $paths = explode('-',$request->query('date'));
+        // dd($path)
+        // to get current month and year
         $months = date('m');
         $years = date('Y');
-        $query = '
-        SELECT nama_departemen, nama_jabatan, id_karyawan, gaji_pokok, nilai_bonus_gaji,name
-        FROM karyawan
-
-        INNER JOIN departemen on karyawan.departemen_id_departemen = departemen.id_departemen
-
-        INNER JOIN jabatan on karyawan.jabatan_id_jabatan = jabatan.id_jabatan
         
-        INNER JOIN users ON karyawan.user_id_user = users.id
-    ';
+        if (count($paths) > 1) {
+            $months = (int)$paths[1];
+            $years = (int)$paths[0];
+        }
+
+
+        $query = '
+            SELECT nama_departemen, nama_jabatan, id_karyawan, gaji_pokok, nilai_bonus_gaji,name
+            FROM karyawan
+
+            INNER JOIN departemen on karyawan.departemen_id_departemen = departemen.id_departemen
+
+            INNER JOIN jabatan on karyawan.jabatan_id_jabatan = jabatan.id_jabatan
+            
+            INNER JOIN users ON karyawan.user_id_user = users.id
+        ';
 
 
         if(Auth::user()->karyawan){
@@ -238,6 +248,7 @@ class PenghargaanController extends Controller
     public function getFormPenilaianPerKaryawan($id_karyawan, $months, $years) 
     {
         $tempDate = date_create($years."-".$months);
+        // dd($tempDate);
         $penilaianPerKaryawan = DB::select('
             SELECT nilai_skor
             FROM penilaian 
@@ -246,6 +257,8 @@ class PenghargaanController extends Controller
             AND karyawan_id_karyawan = (?)
             LIMIT 1
         ', [$tempDate, $tempDate, $id_karyawan]);
+
+        // dd($penilaianPerKaryawan);
 
         // dd($penilaianPerKaryawan);
         // if ($penilaianPerKaryawan == 100) {
@@ -260,6 +273,11 @@ class PenghargaanController extends Controller
         // }else if($penilaianPerKaryawan[0]->nilai_skor <= 75 && $penilaianPerKaryawan[0]->nilai_skor >= 74){
         //     return 250000;
         // }
+
+        if (count($penilaianPerKaryawan) == 0) {
+            return 0;
+        }
+
             if($penilaianPerKaryawan[0]->nilai_skor ==  100){
                 return 500000;
             } else if($penilaianPerKaryawan[0]->nilai_skor >= 75 && $penilaianPerKaryawan[0]->nilai_skor <= 99 ){

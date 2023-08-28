@@ -646,7 +646,7 @@
         var $year = $('#year').find(":selected").val();
         var month = $('#month').find(":selected").val();
         // console.log('DEBUGGG >>', $year, month);
-        var url = "{{ route('penilaian.with.date') }}";
+        var url = "{{ route('penilaian') }}";
 
         $.ajax({
             url,

@@ -15,7 +15,7 @@
                 <h4>Pilih Bulan dan Tahun </h4>
                 <select id="month" name="month">
                     <option value="">Select Month</option>
-                    <?php
+                        <?php
                             $selected_month = $months; //current month
                             for ($i_month = 1; $i_month <= 12; $i_month++) { 
                                 $selected = $selected_month == $i_month ? ' selected' : '';
@@ -122,27 +122,28 @@
     }
 
 
-    // function changePage() {
-    //     var $year = $('#year').find(":selected").val();
-    //     var $month = $('#month').find(":selected").val();
-    //     // alert($year + $month);
+    function changePage() {
+        var $year = $('#year').find(":selected").val();
+        var $month = $('#month').find(":selected").val();
+        // alert($year + $month);
     
     
-    //     // // console.log('DEBUGGG >>', $year, month);
-    //     var url = "{{ route('penghargaanWithDate') }}";
+        console.log('DEBUGGG >>', $year, $month);
+        var url = "{{ route('penghargaan') }}";
 
-    //     $.ajax({
-    //         url,
-    //         data: {
-    //             date: `${$year}-${month}`,
-    //         },
-    //         type: 'get',
-    //         success: function (res) {
-    //             // console.log('sucess = ', this.url);
-    //             window.location.href = this.url;
-    //             pageloader();            }
-    //     });
-    // }
+        $.ajax({
+            url,
+            data: {
+                date: `${$year}-${$month}`,
+            },
+            type: 'get',
+            success: function (res) {
+                // console.log('sucess = ', this.url);
+                window.location.href = this.url;
+                pageloader();
+            }
+        });
+    }
 
 </script>
 @endsection

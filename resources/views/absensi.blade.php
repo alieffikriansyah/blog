@@ -521,7 +521,7 @@
         var $year = $('#year').find(":selected").val();
         var month = $('#month').find(":selected").val();
         // console.log('DEBUGGG >>', $year, month);
-        var url = "{{ route('absensi.with.date') }}";
+        var url = "{{ route('absensi') }}";
 
         $.ajax({
             url,

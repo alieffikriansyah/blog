@@ -102,9 +102,10 @@ class PenilaianController extends Controller
         array_push($arrTimes, $tempDate->format('Y-m-d'));
 
         $penilaianPerMonth = DB::select('
-            SELECT nama_form_penilaian, nama, nama_departemen, nama_jabatan, id_penilaian, waktu_penilaian, periode_penilaian, nilai_skor, nama_penilai, form_penilaian_idtable1
+            SELECT nama_form_penilaian, name, nama_departemen, nama_jabatan, id_penilaian, waktu_penilaian, periode_penilaian, nilai_skor, nama_penilai, form_penilaian_idtable1
             FROM penilaian
             INNER JOIN karyawan ON penilaian.karyawan_id_karyawan = karyawan.id_karyawan
+            INNER JOIN users ON karyawan.user_id_user = users.id
             INNER JOIN departemen on karyawan.departemen_id_departemen = departemen.id_departemen
             INNER JOIN jabatan on karyawan.jabatan_id_jabatan = jabatan.id_jabatan
             INNER JOIN form_penilaian ON penilaian.form_penilaian_idtable1 = form_penilaian.idform_penilaian
