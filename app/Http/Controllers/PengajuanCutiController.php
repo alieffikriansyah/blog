@@ -16,54 +16,54 @@ class PengajuanCutiController extends Controller
         $this->middleware('auth');
     }
 
-    public function PengajuanCuti(Request $request)
-    {
-        // $request->user()->authorizeRoles(['superadmin', 'admin']);
-        $request->user();
+    // public function PengajuanCuti(Request $request)
+    // {
+    //     // $request->user()->authorizeRoles(['superadmin', 'admin']);
+    //     $request->user();
 
-        // if(Auth::user()->karyawan){
-        //     $karyawanId = Auth::user()->karyawan->id;
-        //     $PengajuanCuti = pengajuanCuti::where('karyawan_id_karyawan', $karyawanId)->get();
-        // } else {
-        //     $PengajuanCuti = pengajuanCuti::all();
-        // }
+    //     // if(Auth::user()->karyawan){
+    //     //     $karyawanId = Auth::user()->karyawan->id;
+    //     //     $PengajuanCuti = pengajuanCuti::where('karyawan_id_karyawan', $karyawanId)->get();
+    //     // } else {
+    //     //     $PengajuanCuti = pengajuanCuti::all();
+    //     // }
 
-        $PengajuanCuti = pengajuanCuti::all();
-        $karyawan = karyawan::all();
+    //     $PengajuanCuti = pengajuanCuti::all();
+    //     $karyawan = karyawan::all();
 
-        $days_in_month = cal_days_in_month(CAL_GREGORIAN, date('m'), date('Y'));
-        $days = date('d');
-        $months = date('m');
-        $months_name = date('M');
-        $years = date('Y');
+    //     $days_in_month = cal_days_in_month(CAL_GREGORIAN, date('m'), date('Y'));
+    //     $days = date('d');
+    //     $months = date('m');
+    //     $months_name = date('M');
+    //     $years = date('Y');
 
-        $arrDays = [];
-        $arrTimes = [];
-        $allAbsenPerDay = [];
+    //     $arrDays = [];
+    //     $arrTimes = [];
+    //     $allAbsenPerDay = [];
 
-        for ($i = 1; $i <= $days_in_month; $i++) {
-            $tempDate = date_create($years . "-" . $months . "-" . $i);
-            array_push($arrDays, date_format($tempDate, "l, jS F Y"));
-            array_push($arrTimes, $tempDate->format('Y-m-d'));
+    //     for ($i = 1; $i <= $days_in_month; $i++) {
+    //         $tempDate = date_create($years . "-" . $months . "-" . $i);
+    //         array_push($arrDays, date_format($tempDate, "l, jS F Y"));
+    //         array_push($arrTimes, $tempDate->format('Y-m-d'));
 
-            $absen = DB::select('
-                SELECT idpengajuan_cuti ,karyawan_id_karyawan, nama, tanggal_mulai_cuti, keterangan_cuti, status_cuti
-                FROM pengajuan_cuti
-                INNER JOIN karyawan ON pengajuan_cuti.karyawan_id_karyawan = karyawan.id_karyawan
-                AND MONTH(tanggal_mulai_cuti) = MONTH(?) 
-                AND YEAR(tanggal_mulai_cuti) = YEAR(?)
-            ', [$tempDate, $tempDate]);
+    //         $absen = DB::select('
+    //             SELECT idpengajuan_cuti ,karyawan_id_karyawan, nama, tanggal_mulai_cuti, keterangan_cuti, status_cuti
+    //             FROM pengajuan_cuti
+    //             INNER JOIN karyawan ON pengajuan_cuti.karyawan_id_karyawan = karyawan.id_karyawan
+    //             AND MONTH(tanggal_mulai_cuti) = MONTH(?) 
+    //             AND YEAR(tanggal_mulai_cuti) = YEAR(?)
+    //         ', [$tempDate, $tempDate]);
 
-            array_push($allAbsenPerDay, $absen);
-        }
+    //         array_push($allAbsenPerDay, $absen);
+    //     }
 
-        // var_dump($countAbsenPerDays);
+    //     // var_dump($countAbsenPerDays);
 
-        return view(
-            'PengajuanCuti',
-            compact('PengajuanCuti', 'days_in_month', 'months', 'years', 'arrDays', 'arrTimes', 'allAbsenPerDay', 'karyawan')
-        );
-    }
+    //     return view(
+    //         'PengajuanCuti',
+    //         compact('PengajuanCuti', 'days_in_month', 'months', 'years', 'arrDays', 'arrTimes', 'allAbsenPerDay', 'karyawan')
+    //     );
+    // }
 
     public function pengajuanCutiWithDate(Request $request)
     {

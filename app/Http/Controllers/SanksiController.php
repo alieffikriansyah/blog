@@ -21,21 +21,24 @@ class SanksiController extends Controller
     {
         // $request->user()->authorizeRoles(['superadmin', 'admin']);
         $request->user();
-      
+        
         $karyawan = Karyawan::all();
 
         if(Auth::user()->karyawan ){
             $sanksi = [];
             foreach(Sanksi::all() as $item){
-                if($item->karyawan->user_id_user == 1 ){
+                if($item->karyawan->user->name == 1){
                     $sanksi[] = $item;
+                    // dd($item);
+                    
                 }
             }
         } else {
             $sanksi = Sanksi::all();
         }
-        
-      
+       
+
+    
 
         return view('sanksi', compact('sanksi', 'karyawan'));
      

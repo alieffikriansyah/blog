@@ -15,55 +15,55 @@ class AbsensiController extends Controller
         $this->middleware('auth');
     }
 
-    public function absensi(Request $request)
-    {
-        // dd($request);
-        // $request->user()->authorizeRoles(['superadmin', 'admin']);
-        $request->user();
+    // public function absensi(Request $request)
+    // {
+    //     // dd($request);
+    //     // $request->user()->authorizeRoles(['superadmin', 'admin']);
+    //     $request->user();
 
-        $absensi = Absensi::all();
-        $karyawan = Karyawan::all();
+    //     $absensi = Absensi::all();
+    //     $karyawan = Karyawan::all();
 
-        $days_in_month = cal_days_in_month(CAL_GREGORIAN, date('m'), date('Y'));
-        $days = date('d');
-        $months = date('m');
-        $months_name = date('M');
-        $years = date('Y');
+    //     $days_in_month = cal_days_in_month(CAL_GREGORIAN, date('m'), date('Y'));
+    //     $days = date('d');
+    //     $months = date('m');
+    //     $months_name = date('M');
+    //     $years = date('Y');
 
-        $arrDays = [];
-        $arrTimes = [];
-        $allAbsenPerDay = [];
+    //     $arrDays = [];
+    //     $arrTimes = [];
+    //     $allAbsenPerDay = [];
 
-        for ($i = 1; $i <= $days_in_month; $i++) {
-            $tempDate = date_create($years . "-" . $months . "-" . $i);
-            array_push($arrDays, date_format($tempDate, "l, jS F Y"));
-            array_push($arrTimes, $tempDate->format('Y-m-d'));
+    //     for ($i = 1; $i <= $days_in_month; $i++) {
+    //         $tempDate = date_create($years . "-" . $months . "-" . $i);
+    //         array_push($arrDays, date_format($tempDate, "l, jS F Y"));
+    //         array_push($arrTimes, $tempDate->format('Y-m-d'));
 
-            $query = '
-            SELECT karyawan_id_karyawan, tipe_absensi, user_id_user
-            FROM absensi 
-            INNER JOIN karyawan ON absensi.karyawan_id_karyawan = karyawan.id_karyawan
-            WHERE DAY(tanggaldanwaktu_absensi) = DAY(?) 
-            AND MONTH(tanggaldanwaktu_absensi) = MONTH(?) 
-            AND YEAR(tanggaldanwaktu_absensi) = YEAR(?)
-        ';
+    //         $query = '
+    //         SELECT karyawan_id_karyawan, tipe_absensi, user_id_user
+    //         FROM absensi 
+    //         INNER JOIN karyawan ON absensi.karyawan_id_karyawan = karyawan.id_karyawan
+    //         WHERE DAY(tanggaldanwaktu_absensi) = DAY(?) 
+    //         AND MONTH(tanggaldanwaktu_absensi) = MONTH(?) 
+    //         AND YEAR(tanggaldanwaktu_absensi) = YEAR(?)
+    //     ';
 
-        if(Auth::user()->karyawan){
-            $query .= ' AND karyawan.user_id_user = ' . Auth::user()->id;
-        }
+    //     if(Auth::user()->karyawan){
+    //         $query .= ' AND karyawan.user_id_user = ' . Auth::user()->id;
+    //     }
 
-            $absen = DB::select(($query), [$tempDate, $tempDate, $tempDate]);
+    //         $absen = DB::select(($query), [$tempDate, $tempDate, $tempDate]);
 
-            array_push($allAbsenPerDay, $absen);
-        }
+    //         array_push($allAbsenPerDay, $absen);
+    //     }
 
-        // var_dump($countAbsenPerDays);
+    //     // var_dump($countAbsenPerDays);
 
-        return view(
-            'absensi',
-            compact('absensi', 'days_in_month', 'months', 'years', 'arrDays', 'arrTimes', 'allAbsenPerDay', 'karyawan')
-        );
-    }
+    //     return view(
+    //         'absensi',
+    //         compact('absensi', 'days_in_month', 'months', 'years', 'arrDays', 'arrTimes', 'allAbsenPerDay', 'karyawan')
+    //     );
+    // }
 
     public function absensiWithDate(Request $request)
     {

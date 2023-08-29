@@ -20,50 +20,6 @@ class PenghargaanController extends Controller
     {
         $this->middleware('auth');
     } 
-    // public function penghargaan (Request $request){
-
-    //     $request->user();
-        
-
-    //     $karyawan = karyawan::all();
-    //     $jabatan = Jabatan::all();
-    //     $absen = absensi::all();
-    //     $penilaian = penilaian::all();
-    //     $sanksi = sanksi::all();
-
-    //     $days_in_month = cal_days_in_month(CAL_GREGORIAN,date('m'),date('Y'));
-    //     $days = date('d');
-    //     $months = date('m');
-    //     $months_name = date('M');
-    //     $years = date('Y');
-
-    //     $arrDays = [];
-    //     $arrTimes = [];
-    //     $allAbsenPerDay = [];
-
-    //     for ($i=1; $i <= $days_in_month; $i++) {
-    //         $tempDate = date_create($years."-".$months."-".$i);
-    //         array_push($arrDays, date_format($tempDate, "l, jS F Y"));
-    //         array_push($arrTimes, $tempDate->format('Y-m-d'));
-
-    //         $absen = DB::select('
-    //         SELECT idpengajuan_cuti ,karyawan_id_karyawan, nama, tanggal_mulai_cuti, keterangan_cuti, status_cuti
-    //         FROM pengajuan_cuti
-    //         INNER JOIN karyawan ON pengajuan_cuti.karyawan_id_karyawan = karyawan.id_karyawan
-    //         AND MONTH(tanggal_mulai_cuti) = MONTH(?) 
-    //         AND YEAR(tanggal_mulai_cuti) = YEAR(?)
-    //         ', [$tempDate, $tempDate]);
-
-    //         array_push($allAbsenPerDay, $absen);
-    //         // dd($absen);
-    //     }
-
-    //     // var_dump($countAbsenPerDays);
-
-    //     return view('penghargaans',
-    //     compact('penghargaans', 'days_in_month', 'months', 'years', 'arrDays', 'arrTimes', 'allAbsenPerDay', 'karyawan'));
-    // }
-
     public function penghargaan(Request $request)
     {
 
@@ -111,7 +67,7 @@ class PenghargaanController extends Controller
                 $nilaiBonusPenjualan = self::getBonusPenjualanPerKaryawan($k->id_karyawan, $months, $years);
               
     
-                $bonusGaji =( $nilaiAbsen + $nilaiPenilaian  ) * $nilaiSanksi;
+                $bonusGaji =( $nilaiAbsen + $nilaiPenilaian + $nilaiBonusPenjualan ) * $nilaiSanksi;
             
     
                 
@@ -139,72 +95,72 @@ class PenghargaanController extends Controller
 
     }
     
-    public function penghargaanWithDate (Request $request)
-    {
-        // $request->user()->authorizeRoles(['superadmin', 'admin']);
-        // $request->user();
-        // dd($request);
-        $paths = explode('-',$request->query('date'));
-        // dd($path)
-        // to get current month and year
-        $months = date('m');
-        $years = date('Y');
+    // public function penghargaanWithDate (Request $request)
+    // {
+    //     // $request->user()->authorizeRoles(['superadmin', 'admin']);
+    //     // $request->user();
+    //     // dd($request);
+    //     $paths = explode('-',$request->query('date'));
+    //     // dd($path)
+    //     // to get current month and year
+    //     $months = date('m');
+    //     $years = date('Y');
         
-        if (count($paths) > 1) {
-            $months = (int)$paths[1];
-            $years = (int)$paths[0];
-        }
+    //     if (count($paths) > 1) {
+    //         $months = (int)$paths[1];
+    //         $years = (int)$paths[0];
+    //     }
         
        
-        $karyawan = DB::select('
-        SELECT nama_departemen, nama_jabatan, id_karyawan, gaji_pokok, nilai_bonus_gaji,name
-        FROM karyawan
+    //     $karyawan = DB::select('
+    //     SELECT nama_departemen, nama_jabatan, id_karyawan, gaji_pokok, nilai_bonus_gaji,name
+    //     FROM karyawan
 
-        INNER JOIN departemen on karyawan.departemen_id_departemen = departemen.id_departemen
+    //     INNER JOIN departemen on karyawan.departemen_id_departemen = departemen.id_departemen
 
-        INNER JOIN jabatan on karyawan.jabatan_id_jabatan = jabatan.id_jabatan
+    //     INNER JOIN jabatan on karyawan.jabatan_id_jabatan = jabatan.id_jabatan
         
-        INNER JOIN users ON karyawan.user_id_user = users.id
-        ');
+    //     INNER JOIN users ON karyawan.user_id_user = users.id
+    //     ');
 
-        $result = [];
+    //     $result = [];
 
-        foreach ($karyawan as $k) {
+    //     foreach ($karyawan as $k) {
            
 
-                $karyawanTemp = new stdClass();
+    //             $karyawanTemp = new stdClass();
              
           
-                $nilaiAbsen = self::getNilaiAbsenPerKaryawan($k->id_karyawan, $months, $years);
-                $nilaiSanksi = self::getNilaiSanksiPerKaryawan($k->id_karyawan, $months, $years)/100;
-                $nilaiPenilaian = self::getFormPenilaianPerKaryawan($k->id_karyawan, $months, $years);
+    //             $nilaiAbsen = self::getNilaiAbsenPerKaryawan($k->id_karyawan, $months, $years);
+    //             $nilaiSanksi = self::getNilaiSanksiPerKaryawan($k->id_karyawan, $months, $years)/100;
+    //             $nilaiPenilaian = self::getFormPenilaianPerKaryawan($k->id_karyawan, $months, $years);
               
     
-                $bonusGaji =( $nilaiAbsen + $nilaiPenilaian  ) * $nilaiSanksi;
+    //             $bonusGaji =( $nilaiAbsen + $nilaiPenilaian  ) * $nilaiSanksi;
             
     
-                $gajiTotal = $k->gaji_pokok + $bonusGaji;
+    //             $gajiTotal = $k->gaji_pokok + $bonusGaji;
     
-                $karyawanTemp->karyawan = $k;
+    //             $karyawanTemp->karyawan = $k;
    
-                $karyawanTemp->gajiTotal = $gajiTotal;
-                $karyawanTemp->bonusGaji = $bonusGaji;
-                $karyawanTemp->nilaiAbsen = $nilaiAbsen;
-                $karyawanTemp->nilaiSanksi = $nilaiSanksi;
-                $karyawanTemp->nilaiPenilaian = $nilaiPenilaian;
+    //             $karyawanTemp->gajiTotal = $gajiTotal;
+    //             $karyawanTemp->bonusGaji = $bonusGaji;
+    //             $karyawanTemp->nilaiAbsen = $nilaiAbsen;
+    //             $karyawanTemp->nilaiSanksi = $nilaiSanksi;
+    //             $karyawanTemp->nilaiPenilaian = $nilaiPenilaian;
               
     
-                array_push($result, $karyawanTemp);
+    //             array_push($result, $karyawanTemp);
 
             
 
-            // dd($result);
-        }
+    //         // dd($result);
+    //     }
   
 
-        return view('penghargaan', compact('penghargaan', 'months', 'years', 'karyawan', 'result'));
+    //     return view('penghargaan', compact('penghargaan', 'months', 'years', 'karyawan', 'result'));
 
-    }
+    // }
 
     public function getNilaiAbsenPerKaryawan($id_karyawan, $months, $years) 
     {

@@ -19,48 +19,48 @@ class PenilaianController extends Controller
         $this->middleware('auth');
     }
 
-    public function penilaian(Request $request)
-    {
-        // $request->user()->authorizeRoles(['superadmin', 'admin']);
-        $request->user();
+    // public function penilaian(Request $request)
+    // {
+    //     // $request->user()->authorizeRoles(['superadmin', 'admin']);
+    //     $request->user();
 
-        $penilaian = Penilaian::all();
-        $karyawan = Karyawan::all();
-        $formPenilaian = FormPenilaian::all();
+    //     $penilaian = Penilaian::all();
+    //     $karyawan = Karyawan::all();
+    //     $formPenilaian = FormPenilaian::all();
 
-        // dd($penilaian[0]->formPenilaian);
+    //     // dd($penilaian[0]->formPenilaian);
 
-        $days_in_month = cal_days_in_month(CAL_GREGORIAN, date('m'), date('Y'));
-        $days = date('d');
-        $months = date('m');
-        $months_name = date('M');
-        $years = date('Y');
+    //     $days_in_month = cal_days_in_month(CAL_GREGORIAN, date('m'), date('Y'));
+    //     $days = date('d');
+    //     $months = date('m');
+    //     $months_name = date('M');
+    //     $years = date('Y');
 
-        $arrDays = [];
-        $arrTimes = [];
-        $allAbsenPerDay = [];
+    //     $arrDays = [];
+    //     $arrTimes = [];
+    //     $allAbsenPerDay = [];
 
-        for ($i = 1; $i <= $days_in_month; $i++) {
-            $tempDate = date_create($years . "-" . $months . "-" . $i);
-            array_push($arrDays, date_format($tempDate, "l, jS F Y"));
-            array_push($arrTimes, $tempDate->format('Y-m-d'));
+    //     for ($i = 1; $i <= $days_in_month; $i++) {
+    //         $tempDate = date_create($years . "-" . $months . "-" . $i);
+    //         array_push($arrDays, date_format($tempDate, "l, jS F Y"));
+    //         array_push($arrTimes, $tempDate->format('Y-m-d'));
 
-            $absen = DB::select('
-                SELECT nama_form_penilaian, karyawan_id_karyawan, id_penilaian, waktu_penilaian, periode_penilaian, nilai_skor, nama_penilai
-                FROM penilaian
-                INNER JOIN karyawan ON penilaian.karyawan_id_karyawan = karyawan.id_karyawan
-                INNER JOIN form_penilaian ON penilaian.form_penilaian_idtable1  = form_penilaian.idform_penilaian
-                AND MONTH(waktu_penilaian) = MONTH(?) 
-                AND YEAR(waktu_penilaian) = YEAR(?)
-            ', [$tempDate, $tempDate]);
+    //         $absen = DB::select('
+    //             SELECT nama_form_penilaian, karyawan_id_karyawan, id_penilaian, waktu_penilaian, periode_penilaian, nilai_skor, nama_penilai
+    //             FROM penilaian
+    //             INNER JOIN karyawan ON penilaian.karyawan_id_karyawan = karyawan.id_karyawan
+    //             INNER JOIN form_penilaian ON penilaian.form_penilaian_idtable1  = form_penilaian.idform_penilaian
+    //             AND MONTH(waktu_penilaian) = MONTH(?) 
+    //             AND YEAR(waktu_penilaian) = YEAR(?)
+    //         ', [$tempDate, $tempDate]);
 
-            array_push($allAbsenPerDay, $absen);
-        }
-        return view(
-            'penilaian',
-            compact('penilaian', 'formPenilaian', 'days_in_month', 'months', 'years', 'arrDays', 'arrTimes', 'allAbsenPerDay', 'karyawan')
-        );
-    }
+    //         array_push($allAbsenPerDay, $absen);
+    //     }
+    //     return view(
+    //         'penilaian',
+    //         compact('penilaian', 'formPenilaian', 'days_in_month', 'months', 'years', 'arrDays', 'arrTimes', 'allAbsenPerDay', 'karyawan')
+    //     );
+    // }
 
     public function penilaianWithDate(Request $request)
     {
