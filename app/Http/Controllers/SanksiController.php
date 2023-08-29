@@ -19,20 +19,26 @@ class SanksiController extends Controller
 
     public function sanksi(Request $request)
     {
+    
         // $request->user()->authorizeRoles(['superadmin', 'admin']);
         $request->user();
         
         $karyawan = Karyawan::all();
 
-        if(Auth::user()->karyawan ){
-            $sanksi = [];
-            foreach(Sanksi::all() as $item){
-                if($item->karyawan->user->name == 1){
-                    $sanksi[] = $item;
-                    // dd($item);
+        if(Auth::user()->karyawan){
+            $query = DB::select('select * from Karyawan WHERE karyawan.user_id_user = ' . Auth::user()->id);
+            $sanksi = Sanksi::where('karyawan_id_karyawan','=',$query[0]->id_karyawan)->get();
+
+            // dd($sanksi);
+        // if(Auth::user()->karyawan ){
+        //     $sanksi = [];
+        //     foreach(Sanksi::all() as $item){
+        //         if($item->karyawan->user->name){
+        //             $sanksi[] = $item;
+        //             // dd($item);
                     
-                }
-            }
+        //         }
+        //     }
         } else {
             $sanksi = Sanksi::all();
         }
