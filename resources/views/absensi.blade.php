@@ -9,35 +9,38 @@
                 Add class <code>.table-hover </code>
             </p>
             {{-- <div class="btn-group float-sm-right">
-            <button type="button" class="btn btn-success waves-effect waves-light m-1" data-toggle="modal" data-target="#modaltambah"> <i class="fa fa fa-plus"></i> Tambah</button>
+            <button type="button" class="btn btn-suQccess waves-effect waves-light m-1" data-toggle="modal" data-target="#modaltambah"> <i class="fa fa fa-plus"></i> Tambah</button>
         </div> --}}
             <div class="table-responsive">
-                <h4>Pilih Bulan dan Tahun </h4>
-                <select id="month" name="month">
-                    <option value="">Select Month</option>
-                    <?php
-                            $selected_month = $months; //current month
-                            for ($i_month = 1; $i_month <= 12; $i_month++) { 
-                                $selected = $selected_month == $i_month ? ' selected' : '';
-                                echo '<option value="'.$i_month.'"'.$selected.'>('.$i_month.') '. date('F', mktime(0,0,0,$i_month)).'</option>'."\n";
+                @if (!Auth::user()->karyawan)
+                    <h4>Pilih Bulan dan Tahun </h4>
+                    <select id="month" name="month">
+                        <option value="">Select Month</option>
+                        <?php
+                                $selected_month = $months; //current month
+                                for ($i_month = 1; $i_month <= 12; $i_month++) { 
+                                    $selected = $selected_month == $i_month ? ' selected' : '';
+                                    echo '<option value="'.$i_month.'"'.$selected.'>('.$i_month.') '. date('F', mktime(0,0,0,$i_month)).'</option>'."\n";
+                                }
+                            ?>
+                    </select>
+
+                    <select id="year" name="year">
+                        <option value="">Select Year</option>
+                        <?php 
+                            $year_start  = 1940;
+                            $year_end = 2200; // current Year
+                            $selected_year = $years; // current Year
+
+                            for ($i_year = $year_start; $i_year <= $year_end; $i_year++) {
+                                $selected = $selected_year == $i_year ? ' selected' : '';
+                                echo '<option value="'.$i_year.'"'.$selected.'>'.$i_year.'</option>'."\n";
                             }
                         ?>
-                </select>
-
-                <select id="year" name="year">
-                    <option value="">Select Year</option>
-                    <?php 
-                        $year_start  = 1940;
-                        $year_end = 2200; // current Year
-                        $selected_year = $years; // current Year
-
-                        for ($i_year = $year_start; $i_year <= $year_end; $i_year++) {
-                            $selected = $selected_year == $i_year ? ' selected' : '';
-                            echo '<option value="'.$i_year.'"'.$selected.'>'.$i_year.'</option>'."\n";
-                        }
-                    ?>
-                </select>
-                <button type="button" onclick="changePage()">Pilih </button>
+                    </select>
+                    <button type="button" onclick="changePage()">Pilih </button>
+                @endif
+                
 
                 <table id="default-datatable" class="table table-bordered">
                     <thead>
@@ -83,10 +86,20 @@
                     </div>
                     <div class="col-sm-3">
                         <div class="btn-group float-sm-right">
-                            <button id="button-tambah-absen" type="button"
-                                class="btn btn-success waves-effect waves-light m-1" data-toggle="modal"
-                                data-target="#modaltambah"> <i class="fa fa fa-plus"></i> Tambah</button>
+                            <!-- TAMPILKAN BUTTON TAMBAH KALAU SUDAH ABSEN -- START -->
+                            @if (Auth::user()->karyawan && !$alreadyAbsen)
+                                <button id="button-tambah-absen" type="button"
+                                    class="btn btn-success waves-effect waves-light m-1" data-toggle="modal"
+                                    data-target="#modaltambah"> <i class="fa fa fa-plus"></i> Tambah</button>
+                            @endif
+                            @if (!Auth::user()->karyawan)
+                                <button id="button-tambah-absen" type="button"
+                                    class="btn btn-success waves-effect waves-light m-1" data-toggle="modal"
+                                    data-target="#modaltambah"> <i class="fa fa fa-plus"></i> Tambah</button>
+                            @endif
+                            <!-- TAMPILKAN BUTTON TAMBAH KALAU SUDAH ABSEN -- END -->
                         </div>
+                        <!-- LOG PRESENSI -- START -->
                         @if (!Auth::user()->karyawan)
                         <div class="btn-group float-sm-right">
                             <button id="button-log-absen" type="button"  data-day="{{$day}}" 
@@ -94,6 +107,7 @@
                                 data-target="#modallog"> <i class="fa fa fa-plus"></i> Log presensi</button>
                         </div>
                         @endif
+                        <!-- LOG PRESENSI -- END -->
                     </div>
                 </div>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -192,13 +206,15 @@
                         <input type="datetime-local" id="input-1" name="tanggaldanwaktu_absensi" class="form-control" value="<?php echo (new DateTime('now', new DateTimeZone('Asia/Jakarta')))->format('Y-m-d\TH:i'); ?>" required readonly>
                     </div>
 
-                    <div class="form-group">
-                        <label>Status Hari<span style="color: #ff5252;">*</span></label>
-                        <select class="form-control" name="status_hari">
-                            <option value="masuk">Masuk</option>
-                            <option value="libur">Libur</option>
-                        </select>
-                    </div>
+                    @if (!Auth::user()->karyawan)
+                        <div class="form-group">
+                            <label>Status Hari<span style="color: #ff5252;">*</span></label>
+                            <select class="form-control" name="status_hari">
+                                <option value="masuk">Masuk</option>
+                                <option value="libur">Libur</option>
+                            </select>
+                        </div>
+                    @endif
 
                     {{-- <div class="form-group">
                         <label for="input-11">Keterangan Cuti</label>
@@ -256,12 +272,14 @@
                             
                     </div>
 
-                    <div class="form-group">
-                        <label>Status Hari<span style="color: #ff5252;">*</span></label>
-                        <select class="form-control" name="status_hari_ubah" required>
+                    @if (!Auth::user()->karyawan)
+                        <div class="form-group">
+                            <label>Status Hari<span style="color: #ff5252;">*</span></label>
+                            <select class="form-control" name="status_hari_ubah" required>
 
-                        </select>
-                    </div>
+                            </select>
+                        </div>
+                    @endif
 
                     <input type="hidden" name="id_ubah">
                     {{-- <div class="form-group">
@@ -421,12 +439,14 @@
                 console.log('selectedDate >>>>', selectedDate);
                 console.log('Format >>>>', new Date(currentDate).toDateString());
 
+                // DISABLE BUTTON - START
                 if (new Date(currentDate).toDateString()
  == new Date(selectedDate).toDateString()) {
                     $("#button-tambah-absen").attr("disabled", false);
                 } else {
                     $("#button-tambah-absen").attr("disabled", true);
                 }
+                // DISABLE BUTTON - END
                 console.log($time);
             },
             error: function (err) {
@@ -472,12 +492,12 @@
                 for (let $i = 0; $i < res['karyawan'].length; $i++) {
                     if (res['karyawan'][$i]['id_karyawan'] == res['karyawan_id_karyawan']) {
                         $('select[name*="karyawan_ubah"]').append('<option selected value="' + res[
-                                'karyawan'][$i]['id_karyawan'] + '">' + res['karyawan'][$i]['nama'] +
+                                'karyawan'][$i]['id_karyawan'] + '">' + res['karyawan'][$i]['name'] +
                             '</option>');
                     } else {
                         $('select[name*="karyawan_ubah"]').append('<option value="' + res['karyawan'][$i][
                             'id_karyawan'
-                        ] + '">' + res['karyawan'][$i]['nama'] + '</option>');
+                        ] + '">' + res['karyawan'][$i]['name'] + '</option>');
                     }
                 }
 

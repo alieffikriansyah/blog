@@ -23,6 +23,15 @@ class PenjualanController extends Controller
         // $request->user()->authorizeRoles(['superadmin', 'admin']);
         $request->user();
 
+        $paths = explode('-', $request->query('date'));
+        $months = date('m');
+        $years = date('Y');
+
+        if (count($paths) > 1) {
+            $months = (int)$paths[1];
+            $years = (int)$paths[0];
+        }
+
         // dd($request);
 
         $karyawan = Karyawan::all();
@@ -35,12 +44,13 @@ class PenjualanController extends Controller
                 }
             }
         } else {
-            $penjualan = Penjualan::all();
+            $penjualan = Penjualan::whereMonth('tanggal_penjualan', $months)
+                    ->whereYear('tanggal_penjualan', $years)->get();
         }
         
 
 
-        return view('penjualan', compact('penjualan', 'karyawan'));
+        return view('penjualan', compact('penjualan', 'karyawan', 'months', 'years'));
      
     }
     

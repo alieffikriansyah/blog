@@ -47,9 +47,13 @@
                             <th>Departemen</th>
                             <th>Jabatan</th>
                             <th>Bonus kehadiran, uang makan, dan transport</th>
+                            <th>Jumlah Kehadiran</th>
                             <th>Nilai Sanksi</th>
+                            <th>Jumlah Sanksi</th>
                             <th>Bonus Penilaian</th>
+                            <th>Skor Penilaian</th>
                             <th>Bonus Penjualan</th>
+                            <th>Jumlah Penjualan</th>
                             <th>Gaji Pokok</th>
                             <th>Bonus Gaji</th>
                             <th>Gaji Total</th>
@@ -68,13 +72,17 @@
                             <td>{{$hasil->karyawan->nama_departemen}}</td>
                             <td>{{$hasil->karyawan->nama_jabatan}}</td>
                             <td >
-                                <a href = "{{route('detailNilaiBonusKehadiran')}}">
-                                {{number_format($hasil->nilaiAbsen)}}
-                                </a>
+                                {{number_format($hasil->nilaiAbsen[0])}}
                             </td>
-                            <td>{{$hasil->nilaiSanksi}}</td>
-                            <td>{{number_format($hasil->nilaiPenilaian)}}</td>
-                            <td>{{number_format($hasil->nilaiBonusPenjualan)}}</td>
+                            <td >
+                                {{number_format($hasil->nilaiAbsen[1])}}
+                            </td>
+                            <td>{{$hasil->nilaiSanksi[0]}}</td>
+                            <td>{{$hasil->nilaiSanksi[1]}}</td>
+                            <td>{{number_format($hasil->nilaiPenilaian[0])}}</td>
+                            <td>{{number_format($hasil->nilaiPenilaian[1])}}</td>
+                            <td>{{number_format($hasil->nilaiBonusPenjualan[0])}}</td>
+                            <td>{{number_format($hasil->nilaiBonusPenjualan[1])}}</td>
                             <td>{{number_format($hasil->karyawan->gaji_pokok)}}</td>
                             <td>{{number_format(round($hasil->bonusGaji,0))}}</td>
                             <td>{{number_format($hasil->gajiTotal)}}</td>

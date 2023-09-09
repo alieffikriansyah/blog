@@ -8,6 +8,32 @@
         <p class="card-description">
           Add class <code>.table-hover</code>
         </p>
+        <h4>Pilih Bulan dan Tahun </h4>
+                <select id="month" name="month">
+                    <option value="">Select Month</option>
+                    <?php
+                        $selected_month = $months; //current month
+                        for ($i_month = 1; $i_month <= 12; $i_month++) { 
+                            $selected = $selected_month == $i_month ? ' selected' : '';
+                            echo '<option value="'.$i_month.'"'.$selected.'>('.$i_month.') '. date('F', mktime(0,0,0,$i_month)).'</option>'."\n";
+                        }
+                    ?>
+                </select>
+
+                <select id="year" name="year">
+                    <option value="">Select Year</option>
+                    <?php 
+                    $year_start  = 1940;
+                    $year_end = 2200; // current Year
+                    $selected_year = $years; // current Year
+
+                    for ($i_year = $year_start; $i_year <= $year_end; $i_year++) {
+                        $selected = $selected_year == $i_year ? ' selected' : '';
+                        echo '<option value="'.$i_year.'"'.$selected.'>'.$i_year.'</option>'."\n";
+                    }
+                ?>
+                </select>
+                <button type="button" onclick="changePage()">Pilih </button>
         @if (!Auth::user()->karyawan)
         <div class="btn-group float-sm-right">
             <button type="button" class="btn btn-success waves-effect waves-light m-1" data-toggle="modal" data-target="#modaltambah"> <i class="fa fa fa-plus"></i> Tambah</button>
@@ -181,6 +207,7 @@
   <script src="assets/plugins/bootstrap-datatable/js/bootstrap-datepicker.min.js"></script> --}}
 
 <script>
+
 $(document).ready(function() {
     // var minEl = $('#min');
     // var maxEl = $('#max');
@@ -332,6 +359,29 @@ function hapus($id_penjualan){
 
 
 })
+function changePage() {
+        var $year = $('#year').find(":selected").val();
+        var $month = $('#month').find(":selected").val();
+        // alert($year + $month);
 
+
+        console.log('DEBUGGG >>', $year, $month);
+
+        var url = "{{ route('penjualan') }}";
+
+        $.ajax({
+            url,
+            data: {
+                date: `${$year}-${$month}`,
+            },
+            type: 'get',
+            success: function (res) {
+                console.log('sucess = ', this.url);
+                window.location.href = this.url;
+                pageloader();
+                // alert('ok');
+            }
+        });
+    }
 </script>
 @endsection

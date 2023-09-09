@@ -28,6 +28,7 @@ class SanksiController extends Controller
         // dd($path)
         // to get current month and year
         $months = date('m');
+        $monthsWithoutZero = date('j');
         $years = date('Y');
         
         if (count($paths) > 1) {
@@ -37,12 +38,28 @@ class SanksiController extends Controller
 
         
         $karyawan = Karyawan::all();
+        
+        $sanksi = [];
+        $user= [];
 
         if(Auth::user()->karyawan){
             $query = DB::select('select * from Karyawan WHERE karyawan.user_id_user = ' . Auth::user()->id);
-            $sanksi = Sanksi::where('karyawan_id_karyawan','=',$query[0]->id_karyawan)->get();
+            // $querySanksi = '
+            //     SELECT *
+            //     FROM sanksi
+            //     inner join karyawan on karyawan.id_karyawan = sanksi.karyawan_id_karyawan
+            //     inner join users on users.id = karyawan.user_id_user
+            //     WHERE karyawan_id_karyawan = (?) 
+            //     AND MONTH(waktu_sanksi) = (?) 
+            //     AND YEAR(waktu_sanksi) = (?)
+            // ';
+            // $sanksi = DB::select($querySanksi, [$query[0]->id_karyawan, $monthsWithoutZero, $years]);
 
-            // dd($sanksi);
+            $sanksi = Sanksi::where('karyawan_id_karyawan', '=',$query[0]->id_karyawan )
+                ->whereMonth('waktu_sanksi', $months)
+                ->whereYear('waktu_sanksi', $years)
+                ->get();
+
         // if(Auth::user()->karyawan ){
         //     $sanksi = [];
         //     foreach(Sanksi::all() as $item){
@@ -53,7 +70,18 @@ class SanksiController extends Controller
         //         }
         //     }
         } else {
-            $sanksi = Sanksi::all();
+            // $querySanksi = '
+            //     SELECT *
+            //     FROM sanksi
+            //     inner join karyawan on karyawan.id_karyawan = sanksi.karyawan_id_karyawan
+            //     inner join users on users.id = karyawan.user_id_user
+            //     AND MONTH(waktu_sanksi) = (?) 
+            //     AND YEAR(waktu_sanksi) = (?)
+            // ';
+            // $sanksi = DB::select($querySanksi, [$months, $years]);
+            $sanksi = Sanksi::whereMonth('waktu_sanksi', $months)
+                ->whereYear('waktu_sanksi', $years)
+                ->get();
             $user = User::all();
         }
        

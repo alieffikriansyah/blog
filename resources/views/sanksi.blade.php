@@ -69,8 +69,7 @@
 
                             <td>{{$sank->waktu_sanksi}}</td>
                             <td>{{$sank->keterangan_sanksi}}</td>
-                            {{-- @if (!Auth::user()->karyawan) --}}
-                            {{-- <td>{{$sank->user->name}}</td> --}}
+                             @if (!Auth::user()->karyawan)
                             <td style="text-align:center;">
                                 <button type="button" class="btn btn-warning waves-effect waves-light btn-edit"
                                     data-toggle="modal" data-target="#modalubah" data-id="{{$sank->id_sanksi}}">
@@ -79,7 +78,7 @@
                                     data-id="{{$sank->id_sanksi}}"> Hapus</button>
                             </td>
                         </tr>
-                       {{-- @endif --}}
+                       @endif
                         @php $i++; @endphp
                         @endforeach
                         </tbody>
@@ -394,6 +393,31 @@
 
 
             })
+
+            function changePage() {
+                    var $year = $('#year').find(":selected").val();
+                    var $month = $('#month').find(":selected").val();
+                    // alert($year + $month);
+
+
+                    console.log('DEBUGGG >>', $year, $month);
+
+                    var url = "{{ route('sanksi') }}";
+
+                    $.ajax({
+                        url,
+                        data: {
+                            date: `${$year}-${$month}`,
+                        },
+                        type: 'get',
+                        success: function (res) {
+                            console.log('sucess = ', this.url);
+                            window.location.href = this.url;
+                            pageloader();
+                            // alert('ok');
+                        }
+                    });
+                }
 
         </script>
         @endsection

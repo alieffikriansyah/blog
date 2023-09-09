@@ -62,12 +62,12 @@ class PenghargaanController extends Controller
             
        
                 $nilaiAbsen = self::getNilaiAbsenPerKaryawan($k->id_karyawan, $months, $years);
-                $nilaiSanksi = self::getNilaiSanksiPerKaryawan($k->id_karyawan, $months, $years)/100;
+                $nilaiSanksi = self::getNilaiSanksiPerKaryawan($k->id_karyawan, $months, $years);
                 $nilaiPenilaian = self::getFormPenilaianPerKaryawan($k->id_karyawan, $months, $years);
                 $nilaiBonusPenjualan = self::getBonusPenjualanPerKaryawan($k->id_karyawan, $months, $years);
               
     
-                $bonusGaji =( $nilaiAbsen + $nilaiPenilaian + $nilaiBonusPenjualan ) * $nilaiSanksi;
+                $bonusGaji =( $nilaiAbsen[0] + $nilaiPenilaian[0] + $nilaiBonusPenjualan[0] ) * $nilaiSanksi[0]/100;
             
     
                 
@@ -177,7 +177,7 @@ class PenghargaanController extends Controller
 
         // dd($jumlahAbsenPerBulan);
 
-        return $jumlahAbsenPerBulan[0]->count*30000;
+        return [$jumlahAbsenPerBulan[0]->count*30000, $jumlahAbsenPerBulan[0]->count];
        
     }
        
@@ -193,12 +193,12 @@ class PenghargaanController extends Controller
         ', [ $tempDate, $tempDate, $id_karyawan]);
 
         if ($jumlahSanksiPerBulan[0]->count == 0) {
-            return 100;
+            return [100, $jumlahSanksiPerBulan[0]->count];
         } else if ($jumlahSanksiPerBulan[0]->count == 1) {
-            return 50;
+            return [50, $jumlahSanksiPerBulan[0]->count];
         } 
 
-        return 0;
+        return [0, $jumlahSanksiPerBulan[0]->count];
     }
 
     
@@ -232,15 +232,15 @@ class PenghargaanController extends Controller
         // }
 
         if (count($penilaianPerKaryawan) == 0) {
-            return 0;
+            return [0, 0];
         }
 
             if($penilaianPerKaryawan[0]->nilai_skor ==  100){
-                return 500000;
+                return [500000, $penilaianPerKaryawan[0]->nilai_skor];
             } else if($penilaianPerKaryawan[0]->nilai_skor >= 75 && $penilaianPerKaryawan[0]->nilai_skor <= 99 ){
-                return 250000;
+                return [250000, $penilaianPerKaryawan[0]->nilai_skor];
             }else {
-                return 0;
+                return [0, $penilaianPerKaryawan[0]->nilai_skor];
             }
         
     }
@@ -260,7 +260,7 @@ class PenghargaanController extends Controller
         // dd($jumlahPenjualan);
         // dd(array_sum(array_column($jumlahPenjualan, 'total')));
 
-        return array_sum(array_column($jumlahPenjualan, 'total'));
+        return [array_sum(array_column($jumlahPenjualan, 'total')), count(array_column($jumlahPenjualan, 'total'))];
        
     }
 

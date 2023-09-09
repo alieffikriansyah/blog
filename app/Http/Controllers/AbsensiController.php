@@ -86,6 +86,8 @@ class AbsensiController extends Controller
 
         // var_dump($paths);
 
+        $isKaryawan = false;
+
        $absensi = Absensi::all();
         $karyawan = Karyawan::all();
 
@@ -97,6 +99,7 @@ class AbsensiController extends Controller
         $arrDays = [];
         $arrTimes = [];
         $allAbsenPerDay = [];
+        $alreadyAbsen = false;
 
        for ($i = 1; $i <= $days_in_month; $i++) {
             $tempDate = date_create($years . "-" . $months . "-" . $i);
@@ -113,6 +116,7 @@ class AbsensiController extends Controller
         ';
 
         if(Auth::user()->karyawan){
+            $isKaryawan = true;
             $query .= ' AND karyawan.user_id_user = ' . Auth::user()->id;
         }
 
@@ -121,10 +125,19 @@ class AbsensiController extends Controller
             array_push($allAbsenPerDay, $absen);
         }
 
-        
+        if ($isKaryawan) {
+            $currentDay = date('j');
+            $arrDays = [$arrDays[$currentDay-1]];
+            $arrTimes = [$arrTimes[$currentDay-1]];
+            $allAbsenPerDay =  [$allAbsenPerDay[$currentDay-1]];
 
+            
+            if (count($allAbsenPerDay[0]) > 0) {    
+                $alreadyAbsen = true;
+            }
+        }
 
-        return view('absensi', compact('absensi', 'days_in_month', 'months', 'years','arrDays', 'arrTimes', 'allAbsenPerDay', 'karyawan'));
+        return view('absensi', compact('absensi', 'days_in_month', 'months', 'years','arrDays', 'arrTimes', 'allAbsenPerDay', 'karyawan', 'isKaryawan', 'alreadyAbsen'));
     }
 
     public function tambah_absensi(Request $request)
@@ -140,7 +153,11 @@ class AbsensiController extends Controller
             $absensi = new Absensi();
             $absensi->karyawan_id_karyawan = $request->karyawan;
             $absensi->tanggaldanwaktu_absensi = $request->tanggaldanwaktu_absensi;
-            $absensi->status_hari = $request->status_hari;
+            if(Auth::user()->karyawan){
+                $absensi->status_hari = 'masuk';
+            } else {
+                $absensi->status_hari = $request->status_hari;
+            }
             
             if ($request->keterangan_absensi) {
                 $absensi->keterangan_absensi = $request->keterangan_absensi;
@@ -174,8 +191,7 @@ class AbsensiController extends Controller
      
             } 
             else {
-                $absensi->tipe_absensi = $request->tipe_absensi;
-                
+                $absensi->tipe_absensi = $request->tipe_absensi;   
             }
            
 
@@ -194,9 +210,7 @@ class AbsensiController extends Controller
         $arr = json_decode($absensi, true);
 
         
-
-        $karyawan = Karyawan::all();
-        $arr['karyawan'] = $karyawan;
+        $arr['karyawan'] = DB::table('karyawan')->join('users', 'users.id','=', 'karyawan.user_id_user')->select('*')->get();
 
         echo json_encode($arr);
 
