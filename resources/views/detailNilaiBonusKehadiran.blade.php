@@ -3,7 +3,7 @@
 @section('content')
 <div class="row pt-2 pb-3">
     <div class="col-sm-9 pt-2">
-        <h4 class="page-title">Log Admin</h4>
+        <h4 class="page-title">Bonus Kehadiran</h4>
     </div>
 </div>
 
@@ -12,45 +12,31 @@
         <div class="card" style="background: #f7f7f8 !important;">
         <div class="card-body">
             <div class="table-responsive">
-               <form action="{{route('log')}}" method="GET">
-                <select id="fitur" name="fitur">
-                    <option value=""selected>Semua Fitur</option>
-                    <option value="karyawan">Karyawan</option>
-                    <option value="jabatan">Jabatan</option>
-                    <option value="departemen">Departemen</option>
-                    <option value="presensi">Presensi</option>
-                    <option value="pengajuanCuti">Pengajuan Cuti</option>
-                    <option value="sanksi">Sanksi</option>
-                    <option value="kriteria">Kriteria</option>
-                    <option value="indikator">Indikator</option>
-                    <option value="fromPenilaian"> Form Penilaian</option>
-                    <option value="detilFormPenilaian"> Detil Form Penilaian</option>
-                    <option value="penilaian">Penilaian</option>
-                    <option value="penjualan">Penjualan</option>
-                    <option value="admin">Admin</option>
-                </select>
-                <button type="submit" >Pilih</button>
-               </form>
-
                 <table id="default-datatable" class="table table-bordered">
                 <thead>
                     <tr>
                         <th style="width:5px;">No</th>
-                        <th>Nama</th>
-                        <th>Aksi</th>
-                        <th>Fitur</th>
-                        <th>Waktu</th>
+                        <th>Tanggal</th>
+                        <th>Hadir</th>
+                        <th>Bonus</th>
+                        <th>Total </th>
+                  
+               
                     </tr>
                 </thead>
                 <tbody>
                     @php $i=1; @endphp
-                    @foreach($log as $l)
+                    @foreach($detailNilaiBonusKehadiran as $bonus)
                     <tr>
                         <td>{{$i}}</td>
-                        <td>{{$l->user->name}}</td>
-                        <td>{{$l->aksi}}</td>
-                        <td>{{$l->fitur}}</td>
-                        <td>{{$l->waktu}}</td>
+
+                        <td>{{$bonus->waktu}}</td>
+                        <td>{{$bonus->Hadir}}</td>
+                    
+                        {{-- <td>{{$bonus->allAbsenPerDay}}</td> --}}
+                     
+                        <td>{{number_format(30000)}}</td>
+                        <td>{{$bonus->total}}</td>
                     </tr>
                     @php $i++; @endphp
                     @endforeach

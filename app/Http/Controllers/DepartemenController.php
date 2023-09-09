@@ -25,6 +25,11 @@ class DepartemenController extends Controller
     {
         DB::beginTransaction();
         try {
+            \App\log::create([
+                'user_id_user' => Auth::user()->id,
+                'aksi' => 'Tambah Departemen',
+                'fitur' => 'departemen'
+            ]);
             $departemen = new Departemen();
             $departemen->nama_departemen = $request->nama_departemen;
 
@@ -54,6 +59,11 @@ class DepartemenController extends Controller
         // dd($request);
         DB::beginTransaction();
         try {
+            \App\log::create([
+                'user_id_user' => Auth::user()->id,
+                'aksi' => 'Ubah Departemen',
+                'fitur' => 'departemen'
+            ]);
             $departemen = Departemen::find($request->id_departemen);
             // // $departemen = Departemen::Where('id_departemen','=', $id_departemen)->get();   
             // dd($departemen);
@@ -73,6 +83,11 @@ class DepartemenController extends Controller
         
         DB::beginTransaction();
         try {
+            \App\log::create([
+                'user_id_user' => Auth::user()->id,
+                'aksi' => 'Hapus Departemen',
+                'fitur' => 'departemen'
+            ]);
             Departemen::find($id_departemen)->delete();
             
             DB::commit();

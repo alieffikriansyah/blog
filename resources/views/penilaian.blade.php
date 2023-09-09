@@ -156,7 +156,7 @@
                     <div class="form-group">
                         <label for="input-11">Nama Penilai<span style="color: #ff5252;">*</span></label>
                         <input type="text" class="form-control" id="input-12"  name="nama_penilai"
-                            placeholder="Nama Penilai...." value="Admin"  required readonly>
+                            placeholder="Nama Penilai...." value="{{Auth::user()->name}}"  required readonly>
                     </div>
 
                     <div class="form-group">
@@ -224,7 +224,7 @@
                     <div class="form-group">
                         <label for="input-11">Nama Penilai<span style="color: #ff5252;">*</span></label>
                         <input type="text" class="form-control" id="input-12" required name="nama_penilai"
-                            placeholder="Nama Penilai...." value="Admin">
+                            placeholder="Nama Penilai...." value="{{Auth::user()->name}}">
                     </div>
 
                     <div class="form-group">

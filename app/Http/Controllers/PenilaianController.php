@@ -10,6 +10,7 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use stdClass;
+use Auth;
 
 
 class PenilaianController extends Controller
@@ -123,6 +124,11 @@ class PenilaianController extends Controller
     {
         DB::beginTransaction();
         try {
+            \App\log::create([
+                'user_id_user' => Auth::user()->id,
+                'aksi' => 'Tambah Penilaian',
+                'fitur' => 'penilaian'
+            ]);
             $Penilaian = new Penilaian();
             $Penilaian->karyawan_id_karyawan = $request->karyawan;
             $Penilaian->form_penilaian_idtable1 = $request->idform_penilaian;
@@ -229,6 +235,11 @@ class PenilaianController extends Controller
     {
         DB::beginTransaction();
         try {
+            \App\log::create([
+                'user_id_user' => Auth::user()->id,
+                'aksi' => 'Update Penilaian',
+                'fitur' => 'peilaian'
+            ]);
             $Penilaian = Penilaian::find($request->id_penilaian);
             dd($request->all());
             $Penilaian->karyawan_id_karyawan = $request->karyawan;
@@ -252,6 +263,11 @@ class PenilaianController extends Controller
     {
         DB::beginTransaction();
         try {
+            \App\log::create([
+                'user_id_user' => Auth::user()->id,
+                'aksi' => 'Hapus Penilaian',
+                'fitur' => 'penilaian'
+            ]);
             Penilaian::find($id_penilaian)->delete();
 
             DB::commit();
@@ -276,6 +292,11 @@ class PenilaianController extends Controller
 
         DB::beginTransaction();
         try {
+            \App\log::create([
+                'user_id_user' => Auth::user()->id,
+                'aksi' => 'Update Nilai Skor Penilaian',
+                'fitur' => 'penilaian'
+            ]);
             $penilaian = Penilaian::find($request->id_penilaian_nilai);
             $detailFormPenilaians = DB::select('
                 SELECT *

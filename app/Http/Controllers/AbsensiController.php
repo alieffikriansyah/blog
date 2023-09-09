@@ -7,6 +7,7 @@ use App\karyawan;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class AbsensiController extends Controller
 {
@@ -85,14 +86,13 @@ class AbsensiController extends Controller
 
         // var_dump($paths);
 
-
-
-        $absensi = Absensi::all();
+       $absensi = Absensi::all();
         $karyawan = Karyawan::all();
 
         // var_dump($months, $years);
 
         $days_in_month = cal_days_in_month(CAL_GREGORIAN, $months, $years);
+        
 
         $arrDays = [];
         $arrTimes = [];
@@ -121,38 +121,66 @@ class AbsensiController extends Controller
             array_push($allAbsenPerDay, $absen);
         }
 
-        // var_dump($countAbsenPerDays);
+        
 
-        return view('absensi', compact('absensi', 'days_in_month', 'months', 'years', 'arrDays', 'arrTimes', 'allAbsenPerDay', 'karyawan'));
+
+        return view('absensi', compact('absensi', 'days_in_month', 'months', 'years','arrDays', 'arrTimes', 'allAbsenPerDay', 'karyawan'));
     }
 
     public function tambah_absensi(Request $request)
     {
         DB::beginTransaction();
         try {
+            \App\log::create([
+                'user_id_user' => Auth::user()->id,
+                'aksi' => 'Tambah Presensi Karyawan',
+                'fitur' => 'presensi'
+            ]);
+
             $absensi = new Absensi();
             $absensi->karyawan_id_karyawan = $request->karyawan;
             $absensi->tanggaldanwaktu_absensi = $request->tanggaldanwaktu_absensi;
-            $absensi->tipe_absensi = $request->tipe_absensi;
+            $absensi->status_hari = $request->status_hari;
+            
             if ($request->keterangan_absensi) {
                 $absensi->keterangan_absensi = $request->keterangan_absensi;
             }
-            $absensi->status_hari = $request->status_hari;
 
-            // if ($request->keterangan_cuti) {
-            // $absensi->keterangan_cuti = $request->keterangan_cuti;
-            // }
+            if(Auth::user()->karyawan){
+             $absensi->tipe_absensi = $request->tipe_absensi;
+             $jamMasuk =   $absensi->tanggaldanwaktu_absensi;
+             $jamBatasTerlambat = Carbon::createFromTime(10, 15, 0, 'Asia/Jakarta');
+             $jamMasuk = Carbon::now();
+                if (  $jamMasuk >= $jamBatasTerlambat){
+                
+                    $absensi->tipe_absensi = 'telat';
+                }
+                else{
+                    $absensi->tipe_absensi= 'hadir';
+                }
+                // dd($jamMasuk);
+            //     $request->validate([
+            //         'karyawan_id_karyawan' => 'required|exists:karyawan,id' // Pastikan ada validasi karyawan
+                    
+            //     ]);
+            
+            //  $absenSama = absensi::where('karyawan_id_karyawan',  $absensi->karyawan_id_karyawan);
+            //     if ($absenSama) {
+            //         return redirect()->back()->with('error', 'Karyawan sudah presensi pada tanggal yang sama.');
+            //     }
+            //     else{
+            //         $absensi->karyawan_id_karyawan = $request->karyawan;
+            //     }
+     
+            } 
+            else {
+                $absensi->tipe_absensi = $request->tipe_absensi;
+                
+            }
+           
 
-            // INSERT LOG ABSENSI
-            // CHECK KARYAWAN/ADMIN
-            // if(Auth::user()->karyawan){
-            //     // INSERT LOG SEBAGAI KARYAWAN - OPERATION -> INSERT
-            // } else {
-            //     // INSERT LOG SEBAGAI ADMIN - OPERATION -> INSERT
-            // }
 
             $absensi->save();
-
             DB::commit();
             return back()->with('success', 'Data absensi baru telah berhasil ditambahakan');
         } catch (Exception $e) {
@@ -164,6 +192,8 @@ class AbsensiController extends Controller
     {
         $absensi = Absensi::find($id_absensi);
         $arr = json_decode($absensi, true);
+
+        
 
         $karyawan = Karyawan::all();
         $arr['karyawan'] = $karyawan;
@@ -223,6 +253,11 @@ class AbsensiController extends Controller
     {
         DB::beginTransaction();
         try {
+            \App\log::create([
+                'user_id_user' => Auth::user()->id,
+                'aksi' => 'Ubah Presensi',
+                'fitur' => 'presensi'
+            ]);
             $absensi = Absensi::find($request->id_ubah);
             $absensi->karyawan_id_karyawan = $request->karyawan_ubah;
             $absensi->tanggaldanwaktu_absensi = $request->tanggaldanwaktu_absensi_ubah;
@@ -252,6 +287,11 @@ class AbsensiController extends Controller
     {
         DB::beginTransaction();
         try {
+            \App\log::create([
+                'user_id_user' => Auth::user()->id,
+                'aksi' => 'Hapus Presensi',
+                'fitur' => 'presensi'
+            ]);
             Absensi::find($id_absensi)->delete();
 
              // ADD LOG ABSENSI untuk ID ABSENSI yang dihapus

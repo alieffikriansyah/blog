@@ -4,7 +4,7 @@
 <div class="col-lg grid-margin stretch-card">
     <div class="card">
         <div class="card-body">
-            <h4 class="page-title">Absensi <br> Bulan : {{$months}} <br> Tahun : {{$years}}</h4>
+            <h4 class="page-title">Presensi <br> Bulan : {{$months}} <br> Tahun : {{$years}}</h4>
             <p class="card-description">
                 Add class <code>.table-hover </code>
             </p>
@@ -44,7 +44,7 @@
                         <tr>
                             <th style="width:5px;">No</th>
                             <th>Tanggal</th>
-                            <th>Jumlah Absensi</th>
+                            <th>Jumlah presensi</th>
                             <th style="text-align:center;">Action</th>
                         </tr>
                     </thead>
@@ -53,6 +53,8 @@
                         @foreach($arrDays as $day)
                         <tr>
                             <td>{{$i}}</td>
+                            {{-- <td>{{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $day)}}</td> --}}
+                            {{-- <td>{{ \Carbon\Carbon::now('Y-m-d H:i:s', $day)}}</td> --}}
                             <td>{{$day}}</td>
                             <td>{{count($allAbsenPerDay[$i-1])}}</td>
                             <td style="text-align:center;">
@@ -77,7 +79,7 @@
                 <!-- <h5 class="modal-title">Absen Data Absensi</h5> -->
                 <div class="row pt-2 pb-3">
                     <div class="col-sm-9 pt-1">
-                        <h4 class="page-title">Absen Data Absensi</h4>
+                        <h4 class="page-title">presensi Data presensi</h4>
                     </div>
                     <div class="col-sm-3">
                         <div class="btn-group float-sm-right">
@@ -89,7 +91,7 @@
                         <div class="btn-group float-sm-right">
                             <button id="button-log-absen" type="button"  data-day="{{$day}}" 
                                 class="btn btn-info waves-effect waves-light m-1" data-toggle="modal"
-                                data-target="#modallog"> <i class="fa fa fa-plus"></i> Log Absen</button>
+                                data-target="#modallog"> <i class="fa fa fa-plus"></i> Log presensi</button>
                         </div>
                         @endif
                     </div>
@@ -108,12 +110,14 @@
                                         <thead>
                                             <tr>
                                                 <th>Nama Karyawan</th>
-                                                <th>Tanggal dan Waktu Absensi</th>
-                                                <th>Tipe Absensi</th>
-                                                <th>Keterangan Absensi</th>
+                                                <th>Tanggal dan Waktu presensi</th>
+                                                <th>Tipe Presensi</th>
+                                                <th>Keterangan Presensi</th>
                                                 <th>Status Hari</th>
                                                 {{-- <th>Keterangan Cuti</th> --}}
+                                                @if (!Auth::user()->karyawan)
                                                 <th style="text-align:center;">Action</th>
+                                                @endif
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -135,7 +139,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Tambah Data Absensi Baru</h5>
+                <h5 class="modal-title">Tambah Data presensi Baru</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -146,21 +150,34 @@
                     <!-- karyawan -->
                     <div class="form-group">
                         <label>Karyawan<span style="color: #ff5252;">*</span></label>
-                        <select class="form-control" name="karyawan" required>
+                        <select class="form-control" name="karyawan" @if (!Auth::user()->admin)
+                            readonly
+                        @endif required>
+                            @if (Auth::user()->admin)
                             @foreach ($karyawan as $d)
                             <option value="{{ $d->id_karyawan }}">{{ $d->user->name }}</option>
                             @endforeach
+                            @else 
+                            <option value="{{ Auth::user()->karyawan->id_karyawan }}">{{ Auth::user()->name }}</option>
+                            @endif
+                           
                         </select>
                     </div>
 
                     <div class="form-group">
                         <label>Tipe Absensi<span style="color: #ff5252;">*</span></label>
-                        <select class="form-control" name="tipe_absensi" required>
+                        <select class="form-control" name="tipe_absensi"@if (!Auth::user()->admin)
+                            readonly
+                        @endif required>
+                        @if (Auth::user()->admin)
                             <option value="hadir">Hadir</option>
                             <option value="izin">Izin</option>
                             <option value="telat">Telat</option>
                             <option value="bolos">Bolos</option>
                             <option value="cuti">Cuti</option>
+                            @else 
+                            <option value="hadir">Hadir</option>
+                            @endif
                         </select>
                     </div>
 
@@ -235,8 +252,8 @@
 
                     <div class="form-group">
                         <label for="input-1">Tanggal dan Waktu Absensi<span style="color: #ff5252;">*</span></label>
-                        <input type="text" class="form-control" id="input-1" required readonly
-                            name="tanggaldanwaktu_absensi_ubah" placeholder="yyyy-mm-dd hh:mm:ss">
+                        <input type="datetime-local" id="input-1" name="tanggaldanwaktu_absensi_ubah" class="form-control" value="<?php echo (new DateTime('now', new DateTimeZone('Asia/Jakarta')))->format('Y-m-d\TH:i'); ?>" required readonly>
+                            
                     </div>
 
                     <div class="form-group">
@@ -381,10 +398,14 @@
                         <td>${item.tipe_absensi}</td>
                         <td>${item.keterangan_absensi}</td>
                         <td>${item.status_hari}</td>
+                        @if (!Auth::user()->karyawan)
                         <td>
+                           
                             <button type="button" onclick="ubahAbsen('{{ '${item.id_absensi}' }}')" class="btn btn-warning waves-effect waves-light" data-toggle="modal" data-target="#modalubah"> <i class="fa fa-edit"></i> Ubah</button>
-                                            <button type="button" onclick="hapusAbsen('{{ '${item.id_absensi}' }}')" class="btn btn-danger waves-effect waves-light"> <i class="fa fa-trash"></i> Hapus</button>    
+                                            <button type="button" onclick="hapusAbsen('{{ '${item.id_absensi}' }}')" class="btn btn-danger waves-effect waves-light"> <i class="fa fa-trash"></i> Hapus</button>
+                             
                         </td>
+                        @endif  
 
                     </tr>`
                     )

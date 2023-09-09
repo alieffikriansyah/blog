@@ -70,6 +70,7 @@
                   </div>
                   <a href="{{ route('password.request') }}" class="auth-link text-black">Forgot password?</a>
                 </div>
+             
                 {{-- <div class="mb-2">
                   <button type="button" class="btn btn-block btn-facebook auth-form-btn">
                     <i class="typcn typcn-social-facebook mr-2"></i>Connect using facebook

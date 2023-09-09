@@ -37,7 +37,7 @@
         </a>
         <div class="collapse" id="icons">
             <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="{{route('absensi')}}">Absensi</a></li>
+                <li class="nav-item"> <a class="nav-link" href="{{route('absensi')}}">Presensi</a></li>
                 <li class="nav-item"> <a class="nav-link" href="{{route('pengajuanCuti')}}">Pengajuan Cuti</a></li>
             </ul>
         </div>
@@ -53,7 +53,7 @@
         <div class="collapse" id="form-elements">
             <ul class="nav flex-column sub-menu">
                 <li class="nav-item"><a class="nav-link" href="{{route('sanksi')}}">Sanksi</a></li>
-    @if (!Auth::user()->karyawan)
+                @if (!Auth::user()->karyawan)
 
                 <li class="nav-item"><a class="nav-link" href="{{route('kriteria')}}">Kriteria</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{route('indikator')}}">Indikator</a></li>
@@ -78,8 +78,25 @@
             </ul>
         </div>
     </li>
-@endif
+    @endif
+    @if (Auth::user()->admin && Auth::user()->admin->role == 'superadmin')
+    <li class="nav-item">
+        <a class="nav-link" data-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
+            <i class="typcn typcn-user-add-outline menu-icon"></i>
+            <span class="menu-title">Admin</span>
+            <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="auth">
+            <ul class="nav flex-column sub-menu">
 
+                <li class="nav-item"> <a class="nav-link" href={{route('log')}}> log </a></li>
+                <li class="nav-item"> <a class="nav-link" href={{route('admin')}}> Daftar Admin </a></li>
+
+
+            </ul>
+        </div>
+    </li>
+    @endif
 
     </ul>
 </nav>

@@ -148,10 +148,17 @@
                 <!-- karyawan -->
                 <div class="form-group">
                     <label>Karyawan<span style="color: #ff5252;">*</span></label>
-                    <select class="form-control" name="karyawan" required>
+                    <select class="form-control" name="karyawan" @if (!Auth::user()->admin)
+                        readonly
+                    @endif required>
+                        @if (Auth::user()->admin)
                         @foreach ($karyawan as $d)
-                            <option value="{{ $d->id_karyawan }}">{{ $d->user->name }}</option>
+                        <option value="{{ $d->id_karyawan }}">{{ $d->user->name }}</option>
                         @endforeach
+                        @else 
+                        <option value="{{ Auth::user()->karyawan->id_karyawan }}">{{ Auth::user()->name }}</option>
+                        @endif
+                       
                     </select>
                 </div>
 

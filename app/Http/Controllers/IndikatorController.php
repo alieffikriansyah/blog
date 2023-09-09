@@ -28,6 +28,11 @@ class IndikatorController extends Controller
     {
         DB::beginTransaction();
         try {
+            \App\log::create([
+                'user_id_user' => Auth::user()->id,
+                'aksi' => 'Tambah Indikator',
+                'fitur' => 'indikator'
+            ]);
             $indikator = new Indikator();
             $indikator->nama_indikator = $request->nama_indikator;
             $indikator->kriteria_id_kriteria = $request->kriteria;
@@ -59,6 +64,11 @@ class IndikatorController extends Controller
 
         DB::beginTransaction();
         try {
+            \App\log::create([
+                'user_id_user' => Auth::user()->id,
+                'aksi' => 'Update Indikator',
+                'fitur' => 'indikator'
+            ]);
             $indikator = Indikator::find($request->id_indikator_ubah);
             $indikator->nama_indikator = $request->nama_indikator_ubah;
             $indikator->kriteria_id_kriteria = $request->kriteria_ubah;
@@ -76,6 +86,11 @@ class IndikatorController extends Controller
     {
         DB::beginTransaction();
         try {
+            \App\log::create([
+                'user_id_user' => Auth::user()->id,
+                'aksi' => 'Hapus Indikator',
+                'fitur' => 'indikator'
+            ]);
             Indikator::find($id_indikator)->delete();
             
             DB::commit();

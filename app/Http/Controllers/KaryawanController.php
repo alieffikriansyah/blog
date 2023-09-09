@@ -37,6 +37,11 @@ class KaryawanController extends Controller
     {
         DB::beginTransaction();
         try {
+            \App\log::create([
+                'user_id_user' => Auth::user()->id,
+                'aksi' => 'Tambah Karyawan',
+                'fitur' => 'karyawan'
+            ]);
             $user = new User();
             $user->email = $request->email;
             $user->name = $request->nama;
@@ -93,6 +98,11 @@ class KaryawanController extends Controller
         
         DB::beginTransaction();
         try {
+            \App\log::create([
+                'user_id_user' => Auth::user()->id,
+                'aksi' => 'Update Karyawan',
+                'fitur' => 'karyawan'
+            ]);
             // $tables = DB::select('SHOW karyawan'); 
 
             // $karyawan = Schema::getColumnListing("karyawan");
@@ -133,6 +143,11 @@ class KaryawanController extends Controller
     {
         DB::beginTransaction();
         try {
+            \App\log::create([
+                'user_id_user' => Auth::user()->id,
+                'aksi' => 'Hapus Karyawan',
+                'fitur' => 'karyawan'
+            ]);
             Karyawan::find($id_karyawan)->delete();
             
             DB::commit();

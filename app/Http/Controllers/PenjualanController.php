@@ -115,15 +115,20 @@ class PenjualanController extends Controller
     {
         DB::beginTransaction();
         try {
+            \App\log::create([
+                'user_id_user' => Auth::user()->id,
+                'aksi' => 'Tambah Penjualan',
+                'fitur' => 'penjualan'
+            ]);
             $penjualan = new Penjualan();
             $penjualan->merk = $request->merk;
             $penjualan->jenis_mobil = $request->jenis_mobil;
             $penjualan->harga = $request->harga;
             $penjualan->unit = $request->unit;
             $penjualan->tanggal_penjualan = $request->tanggal_penjualan;
-            $sanksi->karyawan_id_karyawan = $request->karyawan->user->name;
+            $penjualan->karyawan_id_karyawan = $request->karyawan;
 
-            $sanksi->save();
+            $penjualan->save();
 
             DB::commit();
             return back()->with('success', 'Data sanksi baru telah berhasil ditambahakan');
@@ -153,6 +158,11 @@ class PenjualanController extends Controller
     //   dd($request);
         DB::beginTransaction();
         try {
+            \App\log::create([
+                'user_id_user' => Auth::user()->id,
+                'aksi' => 'Update Penjualan',
+                'fitur' => 'penjualan'
+            ]);
             $penjualan = Penjualan::find($request->id_penjualan_ubah);
             $penjualan->merk = $request->merk_ubah;
             $sanksi->jenis_mobil= $request->jenis_mobil_ubah;
@@ -174,6 +184,11 @@ class PenjualanController extends Controller
     {
         DB::beginTransaction();
         try {
+            \App\log::create([
+                'user_id_user' => Auth::user()->id,
+                'aksi' => 'Hapus Penjualan',
+                'fitur' => 'penjualan'
+            ]);
             Sanksi::find($id_penjualan)->delete();
             
             DB::commit();

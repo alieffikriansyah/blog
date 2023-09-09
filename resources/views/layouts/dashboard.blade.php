@@ -5,7 +5,7 @@
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>PolluxUI Admin</title>
+  <title>Syafana Jaya Motor</title>
   <!-- base:css -->
   <link rel="stylesheet" href="asset/vendors/typicons/typicons.css">
   <link rel="stylesheet" href="asset/vendors/css/vendor.bundle.base.css">
@@ -608,7 +608,7 @@
         </div>
         <!-- content-wrapper ends -->
         <!-- partial:partials/_footer.html -->
-        <footer class="footer">
+        {{-- <footer class="footer">
             <div class="card">
                 <div class="card-body">
                     <div class="d-sm-flex justify-content-center justify-content-sm-between">
@@ -621,7 +621,7 @@
                     </div>
                 </div>    
             </div>        
-        </footer>
+        </footer> --}}
         <!-- partial -->
       </div>
       <!-- main-panel ends -->

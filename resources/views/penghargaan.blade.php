@@ -49,11 +49,11 @@
                             <th>Bonus kehadiran, uang makan, dan transport</th>
                             <th>Nilai Sanksi</th>
                             <th>Bonus Penilaian</th>
-                            
+                            <th>Bonus Penjualan</th>
                             <th>Gaji Pokok</th>
                             <th>Bonus Gaji</th>
                             <th>Gaji Total</th>
-                            <th>Bonus Penjualan</th>
+                            
                         </tr>
                     </thead>
                     <tbody>
@@ -67,13 +67,18 @@
                            
                             <td>{{$hasil->karyawan->nama_departemen}}</td>
                             <td>{{$hasil->karyawan->nama_jabatan}}</td>
-                            <td>{{$hasil->nilaiAbsen}}</td>
+                            <td >
+                                <a href = "{{route('detailNilaiBonusKehadiran')}}">
+                                {{number_format($hasil->nilaiAbsen)}}
+                                </a>
+                            </td>
                             <td>{{$hasil->nilaiSanksi}}</td>
-                            <td>{{$hasil->nilaiPenilaian}}</td>
+                            <td>{{number_format($hasil->nilaiPenilaian)}}</td>
+                            <td>{{number_format($hasil->nilaiBonusPenjualan)}}</td>
                             <td>{{number_format($hasil->karyawan->gaji_pokok)}}</td>
                             <td>{{number_format(round($hasil->bonusGaji,0))}}</td>
-                            <td>{{$hasil->gajiTotal}}</td>
-                            <td>{{$hasil->nilaiBonusPenjualan}}</td>
+                            <td>{{number_format($hasil->gajiTotal)}}</td>
+                         
                         </tr>
                         @php $i++; @endphp
                         @endforeach
@@ -146,6 +151,16 @@
             }
         });
     }
+   
+    // $(".clickable-row").each(function (index) {
+    //     $(this).on("click", function () {
+    //         // ubah($(this).data("{{route('detailNilaiBonusKehadiran')}}"));
+    //         var url = "{{route('detailNilaiBonusKehadiran')}}";
+    //         window.location.href = this.url;
+    //             pageloader();
+    //     });
+    // });
+
 
 </script>
 @endsection

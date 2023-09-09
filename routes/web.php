@@ -27,6 +27,12 @@ Route::post('ubah_karyawan', 'KaryawanController@ubah_karyawan')->name('karyawan
 Route::get('get_ubah_karyawan/{id}', 'KaryawanController@get_ubah_karyawan')->name('karyawan.getubah');
 Route::get('hapus_karyawan/{id}', 'KaryawanController@hapus_karyawan')->name('karyawan.hapus');
 
+Route::get('admin', 'adminController@admin')->name('admin');
+Route::post('admin', 'adminController@tambah_admin')->name('admin.tambah');
+Route::post('ubah_admin', 'adminController@ubah_admin')->name('admin.ubah');
+Route::get('get_ubah_admin/{id}', 'adminController@get_ubah_admin')->name('admin.getubah');
+Route::get('hapus_admin/{id}', 'adminController@hapus_admin')->name('admin.hapus');
+
 Route::get('jabatan', 'JabatanController@jabatan')->name('jabatan');
 Route::post('tambah_jabatan', 'JabatanController@tambah_jabatan')->name('jabatan.tambah');
 Route::post('ubah_jabatan', 'JabatanController@ubah_jabatan')->name('jabatan.ubah');
@@ -118,4 +124,6 @@ Route::get('hapus_penghargaan/{id}', 'PenghargaanController@hapus_penghargaan')-
 Route::get('terima_penghargaan/{id}', 'PenghargaanController@terima_penghargaan')->name('penghargaan.terima');
 Route::get('tolak_penghargaan/{id}', 'PenghargaanController@tolak_penghargaan')->name('penghargaan.tolak');
 
+Route::get('log', 'logController@log')->name('log');
+Route::get('detailNilaiBonusKehadiran', 'detailNilaiBonusKehadiranController@detailNilaiBonusKehadiran')->name('detailNilaiBonusKehadiran');
 

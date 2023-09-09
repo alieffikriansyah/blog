@@ -28,7 +28,6 @@
                             <th>Alamat</th>
                             <th>No. HP</th>
                             <th>Gaji Pokok</th>
-                            <th>Nilai Bonus Gaji</th>
                             <th style="text-align:center;">Status</th>
                             @if (!Auth::user()->karyawan)
                             <th style="text-align:center;">Action</th>
@@ -47,7 +46,6 @@
                             <td>{{$kat->alamat}}</td>
                             <td>{{$kat->no_hp}}</td>
                             <td>{{$kat->gaji_pokok}}</td>
-                            <td>{{$kat->jabatan->nilai_bonus_gaji}} %</td>
                             <td style="text-align:center;">{{$kat->status_karyawan}}</td>
                             @if (!Auth::user()->karyawan)
                             <td style="text-align:center;">

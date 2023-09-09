@@ -29,6 +29,11 @@ class JabatanController extends Controller
     {
         DB::beginTransaction();
         try {
+            \App\log::create([
+                'user_id_user' => Auth::user()->id,
+                'aksi' => 'Tambah Jabatan',
+                'fitur' => 'jabatan'
+            ]);
             $jabatan = new Jabatan();
             $jabatan->nama_jabatan = $request->nama_jabatan;
             $jabatan->nilai_bonus_gaji = $request->nilai_bonus_gaji;
@@ -67,6 +72,11 @@ class JabatanController extends Controller
 
         DB::beginTransaction();
         try {
+            \App\log::create([
+                'user_id_user' => Auth::user()->id,
+                'aksi' => 'Update Jabatan',
+                'fitur' => 'jabatan'
+            ]);
             $jabatan = Jabatan::find($request->id_ubah);
             $jabatan->nama_jabatan = $request->nama_jabatan_ubah;
             $jabatan->nilai_bonus_gaji = $request->nilai_bonus_gaji_ubah;
@@ -85,6 +95,11 @@ class JabatanController extends Controller
         
         DB::beginTransaction();
         try {
+            \App\log::create([
+                'user_id_user' => Auth::user()->id,
+                'aksi' => 'Hapus Jabatan',
+                'fitur' => 'jabatan'
+            ]);
             Jabatan::find($id_jabatan)->delete();
             
             DB::commit();

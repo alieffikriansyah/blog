@@ -41,4 +41,9 @@ class User extends Authenticatable
     {
         return $this->belongsTo('App\Karyawan', 'id', 'user_id_user');
     }
+
+    public function admin()
+    {
+        return $this->belongsTo('App\admin', 'id', 'user_id_user');
+    }
 }

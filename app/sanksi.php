@@ -16,4 +16,10 @@ class sanksi extends Model
     {
         return $this->belongsTo('App\Karyawan', 'karyawan_id_karyawan', 'id_karyawan');
     }
+
+    public function user()
+    {
+        return $this->belongsTo('App\User', 'users_id', 'id');
+    }
+    
 }

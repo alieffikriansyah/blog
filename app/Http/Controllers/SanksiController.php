@@ -20,8 +20,21 @@ class SanksiController extends Controller
     public function sanksi(Request $request)
     {
     
+        
         // $request->user()->authorizeRoles(['superadmin', 'admin']);
         $request->user();
+
+        $paths = explode('-',$request->query('date'));
+        // dd($path)
+        // to get current month and year
+        $months = date('m');
+        $years = date('Y');
+        
+        if (count($paths) > 1) {
+            $months = (int)$paths[1];
+            $years = (int)$paths[0];
+        }
+
         
         $karyawan = Karyawan::all();
 
@@ -41,12 +54,13 @@ class SanksiController extends Controller
         //     }
         } else {
             $sanksi = Sanksi::all();
+            $user = User::all();
         }
        
 
     
 
-        return view('sanksi', compact('sanksi', 'karyawan'));
+        return view('sanksi', compact('sanksi','months','years', 'karyawan','user'));
      
     }
     
@@ -119,12 +133,33 @@ class SanksiController extends Controller
 
     public function tambah_sanksi(Request $request)
     {
+        // dd($request);
         DB::beginTransaction();
         try {
+            \App\log::create([
+                'user_id_user' => Auth::user()->id,
+                'aksi' => 'Tambah Sanksi',
+                'fitur' => 'sanksi'
+            ]);
             $sanksi = new Sanksi();
             $sanksi->keterangan_sanksi = $request->keterangan_sanksi;
             $sanksi->waktu_sanksi = $request->waktu_sanksi;
             $sanksi->karyawan_id_karyawan = $request->karyawan;
+
+            $image = $request->file('foto');
+            $name = str_replace(' ', '-', $image->getClientOriginalName());
+            $destinationPath = '../public/gallery/';
+            $sanksi->foto = $name;
+            $image->move($destinationPath, $name);
+
+            //   if(!Auth::user()->karyawan){
+            //   $sanksi->users_id = $request->user;
+            // //   $karyawan->departemen_id_departemen = $request->departemen;
+            //     }
+
+
+           
+     
 
             $sanksi->save();
 
@@ -157,11 +192,27 @@ class SanksiController extends Controller
     //   dd($request);
         DB::beginTransaction();
         try {
+            \App\log::create([
+                'user_id_user' => Auth::user()->id,
+                'aksi' => 'Update Sanksi',
+                'fitur' => 'sanksi'
+            ]);
             $sanksi = Sanksi::find($request->id_sanksi_ubah);
             $sanksi->keterangan_sanksi = $request->keterangan_sanksi_ubah;
             $sanksi->waktu_sanksi = $request->waktu_sanksi_ubah;
             $sanksi->karyawan_id_karyawan = $request->karyawan_ubah;
+            if($request->file('foto')){
+                // unlink('../public/gallery/'.$sanksi->gambar);
 
+                $image = $request->file('foto');
+                $name = str_replace(' ', '-', $image->getClientOriginalName());
+                $destinationPath = '../public/gallery/';
+                $sanksi->foto = $name;
+                $image->move($destinationPath, $name);
+            }
+            //      if(!Auth::user()->karyawan){
+            //   $sanksi->users_id = $request->user;
+            //         }
             $sanksi->save();
 
             DB::commit();
@@ -175,6 +226,11 @@ class SanksiController extends Controller
     {
         DB::beginTransaction();
         try {
+            \App\log::create([
+                'user_id_user' => Auth::user()->id,
+                'aksi' => 'Hapus Sanksi',
+                'fitur' => 'sanksi'
+            ]);
             Sanksi::find($id_sanksi)->delete();
             
             DB::commit();

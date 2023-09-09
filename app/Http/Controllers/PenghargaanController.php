@@ -37,7 +37,7 @@ class PenghargaanController extends Controller
 
 
         $query = '
-            SELECT nama_departemen, nama_jabatan, id_karyawan, gaji_pokok, nilai_bonus_gaji,name
+            SELECT nama_departemen, nama_jabatan, id_karyawan, gaji_pokok,name
             FROM karyawan
 
             INNER JOIN departemen on karyawan.departemen_id_departemen = departemen.id_departemen

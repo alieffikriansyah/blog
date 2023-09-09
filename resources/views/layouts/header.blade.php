@@ -1,6 +1,6 @@
 <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
     <div class="navbar-brand-wrapper d-flex justify-content-center">
-        <div class="navbar-brand-inner-wrapper d-flex justify-content-between align-items-center w-100">
+        <div  class="navbar-brand-inner-wrapper-dark d-flex justify-content-center">
             {{-- <a class="navbar-brand brand-logo" href="index.html"><img src="images/logo.svg" alt="logo"/></a>
           <a class="navbar-brand brand-logo-mini" href="index.html"><img src="images/logo-mini.svg" alt="logo"/></a> --}}
             <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
@@ -47,14 +47,14 @@
             <li class="nav-item nav-date dropdown">
                 <a class="nav-link d-flex justify-content-center align-items-center" href="javascript:;">
                     <h6 class="date mb-0">{{Auth::user()->name}}</h6> &nbsp;
-                    @if (Auth::user()->karyawan)(Karyawan) @else (Admin) @endif
+                    @if (Auth::user()->karyawan)(Karyawan) @elseif(Auth::user()->admin)({{Auth::user()->admin->role}}) @endif
                 </a>
             </li>
             <li class="nav-item dropdown">
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                     @csrf
                 </form>
-                <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
+                <a class="dropdown-item" onclick="event.preventDefault();
                    document.getElementById('logout-form').submit();">
                     <i class="typcn typcn-eject text-primary"></i>
                     Logout
@@ -68,7 +68,7 @@
     </div>
 </nav>
 <!-- partial -->
-<nav class="navbar-breadcrumb col-xl-12 col-12 d-flex flex-row p-0">
+{{-- <nav class="navbar-breadcrumb col-xl-12 col-12 d-flex flex-row p-0">
     <div class="navbar-links-wrapper d-flex align-items-stretch" style="opacity: 0">
         <div class="nav-link">
             <a href="javascript:;"><i class="typcn typcn-calendar-outline"></i></a>
@@ -82,13 +82,13 @@
         <div class="nav-link">
             <a href="javascript:;"><i class="typcn typcn-document-text"></i></a>
         </div>
-    </div>
-    <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+    </div> --}}
+    {{-- <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
         <ul class="navbar-nav mr-lg-2">
             <li class="nav-item ml-0">
                 <h4 class="mb-0">Dashboard</h4>
             </li>
-            {{-- <li class="nav-item">
+            <li class="nav-item">
             <div class="d-flex align-items-baseline">
               <p class="mb-0">Home</p>
               <i class="typcn typcn-chevron-right"></i>
@@ -107,6 +107,6 @@
               </div>
             </div>
           </li>
-        </ul> --}}
-    </div>
-</nav>
+        </ul>
+    </div> --}}
+{{-- </nav> --}}

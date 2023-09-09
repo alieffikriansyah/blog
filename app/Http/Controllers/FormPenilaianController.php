@@ -35,6 +35,11 @@ class FormPenilaianController extends Controller
     {
         DB::beginTransaction();
         try {
+            \App\log::create([
+                'user_id_user' => Auth::user()->id,
+                'aksi' => 'Tambah Form Penilaian',
+                'fitur' => 'formPenilaian'
+            ]);
             $formPenilaian = new FormPenilaian();
             $formPenilaian->nama_form_penilaian = $request->nama_form_penilaian;
 
@@ -61,6 +66,11 @@ class FormPenilaianController extends Controller
         // dd($request);
         DB::beginTransaction();
         try {
+            \App\log::create([
+                'user_id_user' => Auth::user()->id,
+                'aksi' => 'Update Form Penilaian',
+                'fitur' => 'formPenilaian'
+            ]);
             $form_penilaian = FormPenilaian::find($request->id_form_penilaian_ubah);
             $form_penilaian->nama_form_penilaian = $request->nama_form_penilaian_ubah;
 
@@ -78,6 +88,11 @@ class FormPenilaianController extends Controller
         // dd($idform_penilaian);
         DB::beginTransaction();
         try {
+            \App\log::create([
+                'user_id_user' => Auth::user()->id,
+                'aksi' => 'Hapus Form Penilaian',
+                'fitur' => 'formPenilaian'
+            ]);
             FormPenilaian::find($idform_penilaian)->delete();
             
             DB::commit();
@@ -108,6 +123,11 @@ class FormPenilaianController extends Controller
     {
         DB::beginTransaction();
         try {
+            \App\log::create([
+                'user_id_user' => Auth::user()->id,
+                'aksi' => 'Hapus Detil Form Penilaian ',
+                'fitur' => 'detilFormPenilaian'
+            ]);
             DetilFormPenilaian::find($id_detil_form_penilaian)->delete();
             
             DB::commit();
@@ -123,6 +143,11 @@ class FormPenilaianController extends Controller
         // dd($request);
         DB::beginTransaction();
         try {
+            \App\log::create([
+                'user_id_user' => Auth::user()->id,
+                'aksi' => 'Tambah Detil Form Peniaian',
+                'fitur' => 'detilFormPenilaian'
+            ]);
             $detail_form_penilaian = new DetilFormPenilaian();
             
             $detail_form_penilaian->form_penilaian_idform_penilaian = $request->id_form_penilaian_tambah;

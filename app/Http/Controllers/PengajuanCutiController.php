@@ -9,6 +9,7 @@ use App\Absensi;
 use Auth;
 use Illuminate\Support\Facades\DB;
 
+
 class PengajuanCutiController extends Controller
 {
     public function __construct()
@@ -135,6 +136,11 @@ class PengajuanCutiController extends Controller
     {
         DB::beginTransaction();
         try {
+            \App\log::create([
+                'user_id_user' => Auth::user()->id,
+                'aksi' => 'Tambah Pengajuan Cuti',
+                'fitur' => 'pengajuanCuti'
+            ]);
             $PengajuanCuti = new PengajuanCuti();
             $PengajuanCuti->status_cuti = 'pending';
             $PengajuanCuti->karyawan_id_karyawan = $request->karyawan;
@@ -160,6 +166,11 @@ class PengajuanCutiController extends Controller
     {
         DB::beginTransaction();
         try {
+            \App\log::create([
+                'user_id_user' => Auth::user()->id,
+                'aksi' => 'Terima Pengajuan Cuti',
+                'fitur' => 'pengajuanCuti'
+            ]);
             $PengajuanCuti = PengajuanCuti::find($request->id);
             $PengajuanCuti->status_cuti = 'terima';
 
@@ -185,6 +196,11 @@ class PengajuanCutiController extends Controller
     {
         DB::beginTransaction();
         try {
+            \App\log::create([
+                'user_id_user' => Auth::user()->id,
+                'aksi' => 'Tolak Pengajuan Cuti',
+                'fitur' => 'pengajuanCuti'
+            ]);
             $PengajuanCuti = PengajuanCuti::find($request->id);
             $PengajuanCuti->status_cuti = 'tolak';
 
@@ -234,6 +250,11 @@ class PengajuanCutiController extends Controller
     {
         DB::beginTransaction();
         try {
+            \App\log::create([
+                'user_id_user' => Auth::user()->id,
+                'aksi' => 'Updatr Pengajuan Cuti ',
+                'fitur' => 'pengajuanCuti'
+            ]);
             $PengajuanCuti = PengajuanCuti::find($request->id_ubah);
             $PengajuanCuti->karyawan_id_karyawan = $request->karyawan_ubah;
             $PengajuanCuti->tanggaldanwaktu_pengajuanCuti = $request->tanggaldanwaktu_pengajuanCuti_ubah;
@@ -255,6 +276,11 @@ class PengajuanCutiController extends Controller
     {
         DB::beginTransaction();
         try {
+            \App\log::create([
+                'user_id_user' => Auth::user()->id,
+                'aksi' => 'Hapus Pengajuan Cuti',
+                'fitur' => 'pengajuanCuti'
+            ]);
             PengajuanCuti::find($id_pengajuanCuti)->delete();
 
             DB::commit();

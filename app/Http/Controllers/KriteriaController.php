@@ -26,6 +26,11 @@ class KriteriaController extends Controller
     {
         DB::beginTransaction();
         try {
+            \App\log::create([
+                'user_id_user' => Auth::user()->id,
+                'aksi' => 'Tambah Kriteria',
+                'fitur' => 'kriteria'
+            ]);
             $kriteria = new Kriteria();
             $kriteria->nama_kriteria = $request->nama_kriteria;
 
@@ -51,6 +56,11 @@ class KriteriaController extends Controller
     {
         DB::beginTransaction();
         try {
+            \App\log::create([
+                'user_id_user' => Auth::user()->id,
+                'aksi' => 'Ubah Kriteria',
+                'fitur' => 'kriteria'
+            ]);
             $kriteria = Kriteria::find($request->id_kriteria_ubah);
             $kriteria->nama_kriteria = $request->nama_kriteria_ubah;
 
@@ -67,6 +77,11 @@ class KriteriaController extends Controller
     {
         DB::beginTransaction();
         try {
+            \App\log::create([
+                'user_id_user' => Auth::user()->id,
+                'aksi' => 'Hapus Kriteria',
+                'fitur' => 'kriteria'
+            ]);
             Kriteria::find($id_kriteria)->delete();
             
             DB::commit();

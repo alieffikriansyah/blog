@@ -18,7 +18,7 @@
                 <tr>
                     <th style="width:5px;">No</th>
                     <th>Nama Jabatan</th>
-                    <th>Nilai Bonus Gaji Jabatan</th>
+             
                     <th style="text-align:center;">Action</th>
                 </tr>
             </thead>
@@ -28,7 +28,7 @@
                 <tr>
                     <td>{{$i}}</td>
                     <td>{{$jab->nama_jabatan}}</td>
-                    <td>{{$jab->nilai_bonus_gaji}}%</td>
+
                     <td style="text-align:center;">
                     <button type="button" class="btn btn-warning waves-effect waves-light btn-edit" data-toggle="modal" data-target="#modalubah" data-id="{{$jab->id_jabatan}}"> <i class="fa fa-edit"></i> Ubah</button>
                     <button type="button" class="btn btn-danger waves-effect waves-light btn-delete" data-id="{{$jab->id_jabatan}}"> <i class="fa fa-trash"></i> Hapus</button>
@@ -60,14 +60,14 @@
                   <input type="text" class="form-control" id="input-1" required name="nama_jabatan" placeholder="Nama Jabatan....">
               </div>
 
-              <div class="form-group">
+              {{-- <div class="form-group">
                   <label for="input-2">Nilai Bonus Gaji Jabatan<span style="color: #ff5252;">*</span></label>
                   <input type="text"  min="0" step="0.01" class="form-control" id="input-2" required name="nilai_bonus_gaji" placeholder="Nilai Bonus Gaji Jabatan....">
-              </div>
+              </div> --}}
 
               <small style="color: #ff5252;">* Wajib Diisi</small>
               <div class="btn-group float-sm-right mt-2">
-                  <button onclick="validateForm('ubhJabatan','nama_jabatan,nilai_bonus_gaji')" type="submit" class="btn btn-success px-5">Simpan</button>
+                  <button onclick="validateForm('ubhJabatan','nama_jabatan')" type="submit" class="btn btn-success px-5">Simpan</button>
               </div>
           </form>
       </div>
@@ -92,13 +92,13 @@
                   <label for="input-11">Nama Jabatan<span style="color: #ff5252;">*</span></label>
                   <input type="text" class="form-control" required id="input-11" name="nama_jabatan_ubah" placeholder="Nama Jabatan....">
               </div>
-              <div class="form-group">
+              {{-- <div class="form-group">
                   <label for="input-12">Nilai Bonus Gaji Jabatan<span style="color: #ff5252;">*</span></label>
                   <input type="number" min="0" step="0.01" class="form-control" required id="input-12" name="nilai_bonus_gaji_ubah" placeholder="Nilai Bonus Gaji Jabatan....">
-              </div>
+              </div> --}}
               <small style="color: #ff5252;">* Wajib Diisi</small>
               <div class="btn-group float-sm-right mt-2">
-                  <button onclick="validateForm('ubhJabatan','nama_jabatan_ubah,nilai_bonus_gaji_ubah')" type="submit" class="btn btn-warning px-5">Ubah</button>
+                  <button onclick="validateForm('ubhJabatan','nama_jabatan_ubah')" type="submit" class="btn btn-warning px-5">Ubah</button>
               </div>
           </form>
       </div>
@@ -153,7 +153,7 @@ function ubah($id_jabatan) {
         success: function(res){
             $('input[name*="id_ubah"]').val(res['id_jabatan']);
             $('input[name*="nama_jabatan_ubah"]').val(res['nama_jabatan']);
-            $('input[name*="nilai_bonus_gaji_ubah"]').val(res['nilai_bonus_gaji']);
+         
         }
     });
 }
