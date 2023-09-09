@@ -26,7 +26,7 @@
                         <td>{{$i}}</td>
                         <td>{{$fp->nama_form_penilaian}}</td>
                         <td style="text-align:center;">
-                        <button type="button" class="btn btn-primary waves-effect waves-light btn-edit-detil" data-toggle="modal" data-target="#modaldetil" data-id="{{$fp->idform_penilaian}}" > <i class="fa fa-plus"></i>{{$fp->idform_penilaian}} Detil Form</button>
+                        <button type="button" class="btn btn-primary waves-effect waves-light btn-edit-detil" data-toggle="modal" data-target="#modaldetil" data-id="{{$fp->idform_penilaian}}" > <i class="fa fa-plus"></i>Detil Form</button>
                         <button type="button" class="btn btn-warning waves-effect waves-light btn-edit" data-toggle="modal" data-target="#modalubah" data-id="{{$fp->idform_penilaian}}"> <i class="fa fa-edit"></i> Ubah</button>
                         <button type="button" class="btn btn-danger waves-effect waves-light btn-delete" data-id="{{$fp->idform_penilaian}}"> <i class="fa fa-trash"></i> Hapus</button>
                         </td>

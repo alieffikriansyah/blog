@@ -63,7 +63,7 @@
                     <td>{{$penj->jenis_mobil}}</td>
                     <td>{{$penj->merk}}</td>
                     <td>{{$penj->unit}}</td>
-                    <td>{{$penj->harga}}</td>
+                    <td>{{number_format($penj->harga)}}</td>
                     <td>{{$penj->tanggal_penjualan}}</td>
         @if (!Auth::user()->karyawan)
         <td style="text-align:center;">

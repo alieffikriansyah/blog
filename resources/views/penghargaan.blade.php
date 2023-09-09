@@ -77,7 +77,7 @@
                             <td >
                                 {{number_format($hasil->nilaiAbsen[1])}}
                             </td>
-                            <td>{{$hasil->nilaiSanksi[0]}}</td>
+                            <td>{{$hasil->nilaiSanksi[0]}}%</td>
                             <td>{{$hasil->nilaiSanksi[1]}}</td>
                             <td>{{number_format($hasil->nilaiPenilaian[0])}}</td>
                             <td>{{number_format($hasil->nilaiPenilaian[1])}}</td>

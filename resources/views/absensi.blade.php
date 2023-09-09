@@ -100,13 +100,13 @@
                             <!-- TAMPILKAN BUTTON TAMBAH KALAU SUDAH ABSEN -- END -->
                         </div>
                         <!-- LOG PRESENSI -- START -->
-                        @if (!Auth::user()->karyawan)
+                        {{-- @if (!Auth::user()->karyawan)
                         <div class="btn-group float-sm-right">
                             <button id="button-log-absen" type="button"  data-day="{{$day}}" 
                                 class="btn btn-info waves-effect waves-light m-1" data-toggle="modal"
                                 data-target="#modallog"> <i class="fa fa fa-plus"></i> Log presensi</button>
                         </div>
-                        @endif
+                        @endif --}}
                         <!-- LOG PRESENSI -- END -->
                     </div>
                 </div>
@@ -440,12 +440,12 @@
                 console.log('Format >>>>', new Date(currentDate).toDateString());
 
                 // DISABLE BUTTON - START
-                if (new Date(currentDate).toDateString()
- == new Date(selectedDate).toDateString()) {
-                    $("#button-tambah-absen").attr("disabled", false);
-                } else {
-                    $("#button-tambah-absen").attr("disabled", true);
-                }
+//                 if (new Date(currentDate).toDateString()
+//  == new Date(selectedDate).toDateString()) {
+//                     $("#button-tambah-absen").attr("disabled", false);
+//                 } else {
+//                     $("#button-tambah-absen").attr("disabled", true);
+//                 }
                 // DISABLE BUTTON - END
                 console.log($time);
             },

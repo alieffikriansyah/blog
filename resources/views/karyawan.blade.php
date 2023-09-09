@@ -45,7 +45,7 @@
                             <td>{{$kat->jabatan->nama_jabatan}}</td>
                             <td>{{$kat->alamat}}</td>
                             <td>{{$kat->no_hp}}</td>
-                            <td>{{$kat->gaji_pokok}}</td>
+                            <td>{{number_format($kat->gaji_pokok)}}</td>
                             <td style="text-align:center;">{{$kat->status_karyawan}}</td>
                             @if (!Auth::user()->karyawan)
                             <td style="text-align:center;">
