@@ -175,13 +175,13 @@ class PenjualanController extends Controller
             ]);
             $penjualan = Penjualan::find($request->id_penjualan_ubah);
             $penjualan->merk = $request->merk_ubah;
-            $sanksi->jenis_mobil= $request->jenis_mobil_ubah;
-            $sanksi->harga= $request->harga_ubah;
-            $sanksi->unit= $request->unit_ubah;
-            $sanksi->tanggal_penjualan = $request->tanggal_penjuaalan_ubah;
-            $sanksi->karyawan_id_karyawan = $request->karyawan_ubah;
+            $penjualan->jenis_mobil= $request->jenis_mobil_ubah;
+            $penjualan->harga= $request->harga_ubah;
+            $penjualan->unit= $request->unit_ubah;
+            $penjualan->tanggal_penjualan = $request->tanggal_penjualan_ubah;
+            $penjualan->karyawan_id_karyawan = $request->karyawan_ubah;
 
-            $sanksi->save();
+            $penjualan->save();
 
             DB::commit();
             return back()->with('success', 'Data sanksi telah berhasil diubah');
