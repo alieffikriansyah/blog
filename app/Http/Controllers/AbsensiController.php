@@ -124,8 +124,9 @@ class AbsensiController extends Controller
 
             array_push($allAbsenPerDay, $absen);
         }
-
-        if ($isKaryawan) {
+        if(Auth::user()->karyawan){
+            if ($isKaryawan) {
+            
             $currentDay = date('j');
             $arrDays = [$arrDays[$currentDay-1]];
             $arrTimes = [$arrTimes[$currentDay-1]];
@@ -136,6 +137,7 @@ class AbsensiController extends Controller
                 $alreadyAbsen = true;
             }
         }
+    }
 
         return view('absensi', compact('absensi', 'days_in_month', 'months', 'years','arrDays', 'arrTimes', 'allAbsenPerDay', 'karyawan', 'isKaryawan', 'alreadyAbsen'));
     }

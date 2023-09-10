@@ -98,13 +98,39 @@
     </li>
     @endif
 
-    <!-- NOTIFIKASI PENINGAT PRESENSI -- START -->
-    @if (date('H') >= 7 && date('H') < 10)
+
+    {{-- @if (Auth::user()->karyawan)
+    <?php
+         $jam = date('H') ;
+      if ( $jam >= 7 && $jam <= 11) {
+        echo "<h6> Harap mengisi presensi <br> sebelum 10.00 !</h6>";
+      }
+    
+    ?>
+    @endif --}}
+
+
+
+ 
+        {{-- <class="nav-link" data-toggle="collapse" href="#error" aria-expanded="false" aria-controls="error"> --}}
+          {{-- <i class="typcn typcn-globe-outline menu-icon"></i> --}}
+        
+          {{-- <div class="badge badge-danger">Harap mengisi presensi</div> --}}
+     
+          {{-- <div class="badge badge-danger"></div> --}}
+          {{-- @endif --}}
+      
+  
+
+   
+     <!-- NOTIFIKASI PENINGAT PRESENSI -- START -->
+    @if (date('j') >= 7 && date('j') < 10)
         <li class="nav-item">
             <div class="badge badge-danger">Harap mengisi presensi</div>
-            <div class="badge badge-danger">sebelum 10.00 !</div>
+            <div class="badge badge-danger">sebelum  jam 10.00 !</div>
         </li>
-    @endif
+   
+    @endif 
     <!-- NOTIFIKASI PENINGAT PRESENSI -- END -->
-    </ul>
+        
 </nav>
