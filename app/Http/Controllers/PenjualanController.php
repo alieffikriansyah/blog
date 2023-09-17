@@ -53,6 +53,61 @@ class PenjualanController extends Controller
         return view('penjualan', compact('penjualan', 'karyawan', 'months', 'years'));
      
     }
+
+    public function getPenjualanPerBulan(Request $request) {
+        $penjualan = Penjualan::select(DB::raw("sum(harga*unit) as jumlah"), DB::raw("MONTH(tanggal_penjualan) as month"))
+                    ->whereYear('tanggal_penjualan', date('Y'))
+                    ->groupBy(DB::raw("month"))
+                    ->pluck('jumlah', 'month');
+
+        $labels = $penjualan->keys();
+        $data = $penjualan->values();
+
+        $labelConvert = [];
+
+        // $arr['labels'] = $labels;
+
+        foreach ($labels as $label) {
+            array_push($labelConvert, self::convertMonthToMonthName($label));
+        }
+        $arr['labels'] = $labelConvert;
+        $arr['data'] = $data;
+
+        // dd($arr);
+
+        echo json_encode($arr);
+    }
+
+    public function convertMonthToMonthName($month) {
+        switch ($month) {
+            case 1:
+                return 'Januari';
+            case 2:
+                return 'Februari';
+            case 3:
+                return 'Maret';
+            case 4:
+                return 'April';
+            case 5:
+                return 'Mei';
+            case 6:
+                return 'Juni';
+            case 7:
+                return 'Juli';
+            case 8:
+                return 'Agustus';
+            case 9:
+                return 'September';
+            case 10:
+                return 'Oktober';
+            case 11:
+                return 'November';
+            case 12:
+                return 'Desember';
+            default:
+                return 'Januari';
+        }
+    }
     
     // public function sanksi(Request $request)
     // {

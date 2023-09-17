@@ -126,4 +126,4 @@ Route::get('tolak_penghargaan/{id}', 'PenghargaanController@tolak_penghargaan')-
 
 Route::get('log', 'logController@log')->name('log');
 Route::get('detailNilaiBonusKehadiran', 'detailNilaiBonusKehadiranController@detailNilaiBonusKehadiran')->name('detailNilaiBonusKehadiran');
-
+Route::get('getPenjualanPerBulan', 'PenjualanController@getPenjualanPerBulan')->name('getPenjualanPerBulan');
