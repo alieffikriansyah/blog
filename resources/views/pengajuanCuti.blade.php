@@ -3,7 +3,7 @@
 <div class="col-lg grid-margin stretch-card">
     <div class="card">
       <div class="card-body">
-        <h4 class="page-title">Absensi <br> Bulan : {{$months}}  <br> Tahun : {{$years}}</h4>
+        <h4 class="page-title">Pengajuan Cuti <br> Bulan : {{$months}}  <br> Tahun : {{$years}}</h4>
         <p class="card-description">
           Add class <code>.table-hover</code>
         </p>

@@ -7,6 +7,8 @@ use App\detilFormPenilaian;
 use App\indikator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\User;
+use Auth;
 
 class FormPenilaianController extends Controller
 {

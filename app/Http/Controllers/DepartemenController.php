@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\departemen;
 use Illuminate\Support\Facades\DB;
+use App\User;
+use Auth;
 
 class DepartemenController extends Controller
 {
