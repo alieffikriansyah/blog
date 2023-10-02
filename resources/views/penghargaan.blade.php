@@ -81,8 +81,8 @@
                             <td>{{$hasil->nilaiSanksi[1]}}</td>
                             <td>{{number_format($hasil->nilaiPenilaian[0])}}</td>
                             <td>{{number_format($hasil->nilaiPenilaian[1])}}</td>
-                            <td>{{number_format($hasil->nilaiBonusPenjualan[0])}}</td>
-                            <td>{{number_format($hasil->nilaiBonusPenjualan[1])}}</td>
+                            <td>{{ $hasil->karyawan->nama_departemen == "penjualan" ? number_format($hasil->nilaiBonusPenjualan[0]) : "-"}}</td>
+                            <td>{{ $hasil->karyawan->nama_departemen == "penjualan" ? number_format($hasil->nilaiBonusPenjualan[1]) : "-"}}</td>
                             <td>{{number_format($hasil->karyawan->gaji_pokok)}}</td>
                             <td>{{number_format(round($hasil->bonusGaji,0))}}</td>
                             <td>{{number_format($hasil->gajiTotal)}}</td>

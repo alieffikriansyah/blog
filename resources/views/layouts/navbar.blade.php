@@ -124,7 +124,8 @@
 
    
      <!-- NOTIFIKASI PENINGAT PRESENSI -- START -->
-    @if (date('j') >= 7 && date('j') < 10)
+     <!-- JAM yang dipake adalah UTC +0 , -7 dari jam indonesia -->
+    @if (date('H') >= 0 && date('H') < 3)
         <li class="nav-item">
             <div class="badge badge-danger">Harap mengisi presensi</div>
             <div class="badge badge-danger">sebelum  jam 10.00 !</div>
@@ -132,5 +133,4 @@
    
     @endif 
     <!-- NOTIFIKASI PENINGAT PRESENSI -- END -->
-        
 </nav>
