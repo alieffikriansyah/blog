@@ -42,7 +42,7 @@
     <div class="col-md-6">
         <div class="card">
             <div class="card-body">
-                <p class="text-primary mb-3">Absensi hari ini <span class="float-right" id="span_penjualan"></span></p>
+                <p class="text-primary mb-3">Presensi hari ini <span class="float-right" id="span_penjualan"></span></p>
                     <div class="container">
                         <div class="row">
                             <div class="col-sm-12">
@@ -54,8 +54,8 @@
                                                     <tr>
                                                         <th style="width:5px;">No</th>
                                                         <th>Nama Karyawan</th>
-                                                        <th>Tanggal dan Waktu Absensi</th>
-                                                        <th>Tipe Absensi</th>
+                                                        <th>Tanggal dan Waktu Presensi</th>
+                                                        <th>Tipe Presensi</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -136,7 +136,8 @@
                                                 <tr>
                                                     <th style="width:5px;">No</th>
                                                     <th>Nama Karyawan</th>
-                                                    <th>Tanggal Pengajuan Cuti</th>
+                                                    <th>Tanggal Mulai Cuti</th>
+                                                    <th>Tanggal Selesai Cuti</th>
                                                     <th>Keterangan Cuti</th>
                                                     <th>Status Cuti</th>
                                                 </tr>
@@ -148,6 +149,7 @@
                                                     <td>{{$i}}</td>
                                                     <td>{{$cuti->name}}</td>
                                                     <td>{{$cuti->tanggal_mulai_cuti}}</td>
+                                                    <td>{{$cuti->tanggal_selesai_cuti}}</td>
                                                     <td>{{$cuti->keterangan_cuti}}</td>
                                                     <td>{{$cuti->status_cuti}}</td>
                                                 </tr>

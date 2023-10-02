@@ -97,32 +97,39 @@ class PengajuanCutiController extends Controller
 
         $arrDays = [];
         $arrTimes = [];
+       
 
         $tempDate = date_create($years . "-" . $months);
         array_push($arrDays, date_format($tempDate, "l, jS F Y"));
         array_push($arrTimes, $tempDate->format('Y-m-d'));
 
+        
+
+
          if(Auth::user()->karyawan){
             $karyawanId = Auth::user()->karyawan->id_karyawan;
             // dd(Auth::user()->karyawan->id_karyawan);
             $cutiPerMonth = DB::select('
-                SELECT idpengajuan_cuti ,karyawan_id_karyawan, name, tanggal_mulai_cuti, keterangan_cuti, status_cuti
+                SELECT idpengajuan_cuti ,karyawan_id_karyawan, name, tanggal_mulai_cuti, tanggal_selesai_cuti, keterangan_cuti, status_cuti
                 FROM pengajuan_cuti
                 INNER JOIN karyawan ON pengajuan_cuti.karyawan_id_karyawan = karyawan.id_karyawan
                 INNER JOIN users ON karyawan.user_id_user = users.id
                 WHERE pengajuan_cuti.karyawan_id_karyawan = ?
-                AND MONTH(tanggal_mulai_cuti) = MONTH(?) 
-                AND YEAR(tanggal_mulai_cuti) = YEAR(?)
+                AND MONTH(tanggal_mulai_cuti) && MONTH(tanggal_selesai_cuti) = MONTH(?) 
+                AND YEAR(tanggal_mulai_cuti) && YEAR(tanggal_selesai_cuti) = YEAR(?)
+               
+              
             ', [$karyawanId, $tempDate, $tempDate]);
             // dd($cutiPerMonth);
         } else {
             $cutiPerMonth = DB::select('
-                SELECT idpengajuan_cuti ,karyawan_id_karyawan, name, tanggal_mulai_cuti, keterangan_cuti, status_cuti
+                SELECT idpengajuan_cuti ,karyawan_id_karyawan, name, tanggal_mulai_cuti, tanggal_selesai_cuti, keterangan_cuti, status_cuti
                 FROM pengajuan_cuti
                 INNER JOIN karyawan ON pengajuan_cuti.karyawan_id_karyawan = karyawan.id_karyawan
                 INNER JOIN users ON karyawan.user_id_user = users.id
-                WHERE MONTH(tanggal_mulai_cuti) = MONTH(?) 
-                AND YEAR(tanggal_mulai_cuti) = YEAR(?)
+                WHERE MONTH(tanggal_mulai_cuti) && MONTH(tanggal_selesai_cuti) = MONTH(?) 
+                AND YEAR(tanggal_mulai_cuti) && YEAR(tanggal_selesai_cuti) = YEAR(?)
+              
             ', [$tempDate, $tempDate]);
             // dd($cutiPerMonth);
         }

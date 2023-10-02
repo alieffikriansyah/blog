@@ -115,16 +115,22 @@ class AbsensiController extends Controller
             AND YEAR(tanggaldanwaktu_absensi) = YEAR(?)
         ';
 
+        // if(!Auth::user()->karyawan){
+        //     $query .= ' AND karyawan.user_id_user = ' . Auth::user()->id;
+        //     $absen = DB::select(($query), [$tempDate, $tempDate, $tempDate]);
+
+        //     array_push($allAbsenPerDay, $absen);
+            
+        // }
+            $query .= ' AND karyawan.user_id_user = ' . Auth::user()->id;
+            $absen = DB::select(($query), [$tempDate, $tempDate, $tempDate]);
+            array_push($allAbsenPerDay, $absen);
+
+           dd($allAbsenPerDay);
+        }
         if(Auth::user()->karyawan){
             $isKaryawan = true;
-            $query .= ' AND karyawan.user_id_user = ' . Auth::user()->id;
-        }
-
-            $absen = DB::select(($query), [$tempDate, $tempDate, $tempDate]);
-
-            array_push($allAbsenPerDay, $absen);
-        }
-        if(Auth::user()->karyawan){
+           
             if ($isKaryawan) {
             
             $currentDay = date('j');

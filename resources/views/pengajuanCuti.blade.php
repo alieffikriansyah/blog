@@ -59,7 +59,7 @@
                             <td>{{$i}}</td>
                             <td>{{$cuti->name}}</td>
                             <td>{{$cuti->tanggal_mulai_cuti}}</td>
-                            <td>{{$cuti->tanggal_mulai_cuti}}</td>
+                            <td>{{$cuti->tanggal_selesai_cuti}}</td>
                             <td>{{$cuti->keterangan_cuti}}</td>
                             <td>{{$cuti->status_cuti}}</td>
                                     @if (!Auth::user()->karyawan)
@@ -192,7 +192,7 @@
     <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
-        <h5 class="modal-title">Ubah Data Absen</h5>
+        <h5 class="modal-title">Ubah Data Cuti</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>

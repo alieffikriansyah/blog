@@ -102,12 +102,14 @@ class HomeController extends Controller
         $tempDate = date_create($years."-".$months);
 
         $cutiPerMonth = DB::select('
-            SELECT idpengajuan_cuti ,karyawan_id_karyawan, name, tanggal_mulai_cuti, keterangan_cuti, status_cuti
+            SELECT idpengajuan_cuti ,karyawan_id_karyawan, name, tanggal_mulai_cuti, tanggal_selesai_cuti, keterangan_cuti, status_cuti
             FROM pengajuan_cuti
             INNER JOIN karyawan ON pengajuan_cuti.karyawan_id_karyawan = karyawan.id_karyawan
             INNER JOIN users ON users.id = karyawan.user_id_user
-            AND MONTH(tanggal_mulai_cuti) = MONTH(?) 
-            AND YEAR(tanggal_mulai_cuti) = YEAR(?)
+            AND MONTH(tanggal_mulai_cuti) && MONTH(tanggal_selesai_cuti) = MONTH(?) 
+            AND YEAR(tanggal_mulai_cuti) && YEAR(tanggal_selesai_cuti) = YEAR(?)
+          
+           
         ', [$tempDate, $tempDate]);
 
         $sanksiPerMonth = DB::select('
