@@ -280,12 +280,27 @@ class PenilaianController extends Controller
 
     public function ubah_penilaian_nilai(Request $request)
     {
+        // dd($request->getContent());
+        
         $requestBody = explode('&', $request->getContent());
         // dd($requestBody);
+        // array:6 [▼
+        //     0 => "_token=FsmTYQqnZmjZlNBw8J6p9vhL5s9G3KUlSljTDdfF"
+        //     1 => "id_form_penilaian_nilai=6"
+        //     2 => "id_penilaian_nilai=8"
+        //     3 => "nilai_detail13=2"
+        //     4 => "nilai_detail14=2"
+        //     5 => "nilai_detail15=2"
+        //     ]
         $result = 0;
 
         foreach ($requestBody as $key) {
             if (str_contains($key, 'nilai_detail')) {
+                // dd(explode("=", $key));
+                // array:2 [▼
+                //     0 => "nilai_detail13"
+                //     1 => "2"
+                // ]
                 $result += explode("=", $key)[1];
             }
         }
