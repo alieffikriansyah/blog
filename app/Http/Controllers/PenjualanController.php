@@ -34,7 +34,7 @@ class PenjualanController extends Controller
 
         // dd($request);
 
-        // cuman ambil karyawan id departemen 1 == penjualan
+        // cuman ambil karyawan id departemen 1 == departemen penjualan
         $karyawan = Karyawan::where('departemen_id_departemen', '=', 1)->get();
 
         // dd($karyawan);
@@ -214,7 +214,8 @@ class PenjualanController extends Controller
         $user = user::all();
         $arr ['user'] =$user;
         
-        $karyawan = Karyawan::all();
+        // cuman ambil karyawan id departemen 1 == penjualan
+        $karyawan = Karyawan::where('departemen_id_departemen', '=', 1)->get();
         $arr['karyawan'] = $karyawan;
 
         echo json_encode($arr);
