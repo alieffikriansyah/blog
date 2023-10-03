@@ -254,7 +254,7 @@ class PenjualanController extends Controller
                 'aksi' => 'Hapus Penjualan',
                 'fitur' => 'penjualan'
             ]);
-            Sanksi::find($id_penjualan)->delete();
+            Penjualan::find($id_penjualan)->delete();
             
             DB::commit();
             return back()->with('success', 'Sanksi telah berhasil dihapus'); 

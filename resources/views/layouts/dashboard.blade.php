@@ -16,7 +16,9 @@
   <link rel="stylesheet" href="asset/css/vertical-layout-light/style.css">
   <!-- endinject -->
   <link rel="shortcut icon" href="asset/images/favicon.png" />
+  
   @yield('style')
+ 
 </head>
 <body>
  
@@ -683,6 +685,8 @@
   <script src="asset/plugins/notifications/js/notification-custom-script.js"></script>
   <script src="asset/plugins/alerts-boxes/js/sweetalert.min.js"></script> --}}
 <script src="{{asset('asset/plugins/alerts-boxes/js/sweetalert.min.js')}}"></script>
+
+
 
 @yield('script')
 

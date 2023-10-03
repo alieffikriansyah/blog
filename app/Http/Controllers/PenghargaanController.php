@@ -56,7 +56,7 @@ class PenghargaanController extends Controller
 
         $result = [];
         foreach ($karyawan as $k) {
-    
+                
 
                 $karyawanTemp = new stdClass();
             
@@ -66,10 +66,16 @@ class PenghargaanController extends Controller
                 $nilaiPenilaian = self::getFormPenilaianPerKaryawan($k->id_karyawan, $months, $years);
                 $nilaiBonusPenjualan = self::getBonusPenjualanPerKaryawan($k->id_karyawan, $months, $years);
               
-    
-                $bonusGaji =( $nilaiAbsen[0] + $nilaiPenilaian[0] + $nilaiBonusPenjualan[0] ) * $nilaiSanksi[0]/100;
+                if($k->nama_departemen == 'penjualan'){
+                    $bonusGaji =( $nilaiAbsen[0] + $nilaiPenilaian[0] + $nilaiBonusPenjualan[0] ) * $nilaiSanksi[0]/100;
             
     
+                }
+                else{
+                    $bonusGaji =( $nilaiAbsen[0] + $nilaiPenilaian[0] ) * $nilaiSanksi[0]/100;
+            
+                }
+               
                 
                 $gajiTotal = $k->gaji_pokok + $bonusGaji;
     

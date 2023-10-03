@@ -538,7 +538,7 @@
                         <td>
                             <div class="form-group">
                                      <label for="input-${item.id_detil_form_penilaian}">Nilai<span style="color: #ff5252;">*</span></label>
-                                    <input type="text" class="form-control" id="input-${item.id_detil_form_penilaian}" name="nilai_detail${item.id_detil_form_penilaian}" placeholder="1-5 ....">
+                                    <input type="number"  min="1"  max="5" class="form-control" id="input-${item.id_detil_form_penilaian}" name="nilai_detail${item.id_detil_form_penilaian}" placeholder="1-5 ....">
                                 </div>    
                         </td>
 

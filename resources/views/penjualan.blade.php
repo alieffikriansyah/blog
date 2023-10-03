@@ -98,7 +98,9 @@
                     <label>Karyawan yang menjual<span style="color: #ff5252;">*</span></label>
                     <select class="form-control" name="karyawan" required>
                         @foreach ($karyawan as $d)
+                            {{-- @if($d->nama_departemen == "penjualan") --}}
                             <option value="{{ $d->id_karyawan }}">{{ $d->user->name }}</option>
+                            {{-- @endif --}}
                         @endforeach
                     </select>
                 </div>
@@ -290,26 +292,45 @@ $(document).ready(function() {
             }
         });
     }
-    $( ".btn-delete" ).each(function(index) {
-    $(this).on("click", function(){
-       hapus($(this).data('id'));
-    // alert('ok');
-    });
-});
-function hapus($id_penjualan){
-    swal({ 
-    title: "Apakah anda yakin?",
-    text: "Setelah dihapus, Anda tidak akan dapat memulihkan data ini!",
-    icon: "warning",
-    buttons: true,
-    dangerMode: true,
-    }).then((willDelete) => {
-        if (willDelete) {
-            window.location.href="{{url('hapus_penjualan')}}/"+$id_penjualan;
-            pageloader();
-        } 
-    });
-}
+    $(".btn-delete").each(function (index) {
+                    $(this).on("click", function () {
+                        hapus($(this).data('id'));
+                        alert('ok');
+                    });
+                });
+
+
+
+
+                function hapus($id_penjualan) {
+                    swal({
+                        title: "Apakah anda yakin?",
+                        text: "Setelah dihapus, Anda tidak akan dapat memulihkan data ini!",
+                        icon: "warning",
+                        buttons: true,
+                        dangerMode: true,
+                    }).then((willDelete) => {
+                        if (willDelete) {
+                            window.location.href = "{{url('hapus_penjualan')}}/" + $id_penjualan;
+                            pageloader();
+                        }
+                    });
+                }
+
+// function hapus($id_penjualan) {
+//         swal({
+//             title: "Apakah anda yakin?",
+//             text: "Setelah dihapus, Anda tidak akan dapat memulihkan data ini!",
+//             icon: "warning",
+//             buttons: true,
+//             dangerMode: true,
+//         }).then((willDelete) => {
+//             if (willDelete) {
+//                 window.location.href = "{{url('hapus_penjualan')}}/" + $id_penjualan;
+//             }
+//                 pageloader();
+//             });
+//     }
 
     // //DATEPICKER
     // $('#month_selector').datepicker({

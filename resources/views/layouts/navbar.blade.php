@@ -100,13 +100,12 @@
 
 
     {{-- @if (Auth::user()->karyawan)
-    <?php
-         $jam = date('H') ;
-      if ( $jam >= 7 && $jam <= 11) {
-        echo "<h6> Harap mengisi presensi <br> sebelum 10.00 !</h6>";
-      }
-    
-    ?>
+     
+        // $jam = date('H') ;
+    //  if ( $jam >= 7 && $jam <= 11) {
+    //    echo "<h6> Harap mengisi presensi <br> sebelum 10.00 !</h6>";
+    //  }
+
     @endif --}}
 
 
@@ -125,7 +124,11 @@
    
      <!-- NOTIFIKASI PENINGAT PRESENSI -- START -->
      <!-- JAM yang dipake adalah UTC +0 , -7 dari jam indonesia -->
-    @if (date('H') >= 0 && date('H') < 3)
+    @if (date('H') >= 0 && date('H') < 4)
+    
+    <?php 
+    // echo (date('H'));
+    ?> 
         <li class="nav-item">
             <div class="badge badge-danger">Harap mengisi presensi</div>
             <div class="badge badge-danger">sebelum  jam 10.00 !</div>

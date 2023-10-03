@@ -76,7 +76,7 @@ Route::get('penjualan', 'PenjualanController@penjualan')->name('penjualan');
 Route::post('tambah_penjualan', 'PenjualanController@tambah_penjualan')->name('penjualan.tambah');
 Route::post('ubah_penjualan', 'PenjualanController@ubah_penjualan')->name('penjualan.ubah');
 Route::get('get_ubah_penjualan/{id}', 'PenjualanController@get_ubah_penjualan')->name('penjualan.getubah');
-Route::get('hapus_penjulan/{id}', 'PenjualanController@hapus_penjualan')->name('penjualan.hapus');
+Route::get('hapus_penjualan/{id}', 'PenjualanController@hapus_penjualan')->name('penjualan.hapus');
 
 
 Route::get('kriteria', 'KriteriaController@kriteria')->name('kriteria');
