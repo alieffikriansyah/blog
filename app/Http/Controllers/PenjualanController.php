@@ -40,12 +40,11 @@ class PenjualanController extends Controller
         // dd($karyawan);
 
         if(Auth::user()->karyawan){
-            $penjualan = [];
-            foreach(Penjualan::get() as $item){
-                if($item->karyawan->user_id_user == 1){
-                    $penjualan[] = $item;
-                }
-            }
+            $query = DB::select('select * from Karyawan WHERE karyawan.user_id_user = ' . Auth::user()->id);
+            // dd($query);
+            $penjualan = Penjualan::where('karyawan_id_karyawan', '=', $query[0]->id_karyawan )
+                ->whereMonth('tanggal_penjualan', $months)
+                ->whereYear('tanggal_penjualan', $years)->get();
         } else {
             $penjualan = Penjualan::whereMonth('tanggal_penjualan', $months)
                     ->whereYear('tanggal_penjualan', $years)->get();
