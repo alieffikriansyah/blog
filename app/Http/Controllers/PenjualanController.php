@@ -34,7 +34,10 @@ class PenjualanController extends Controller
 
         // dd($request);
 
-        $karyawan = Karyawan::all();
+        // cuman ambil karyawan id departemen 1 == penjualan
+        $karyawan = Karyawan::where('departemen_id_departemen', '=', 1)->get();
+
+        // dd($karyawan);
 
         if(Auth::user()->karyawan){
             $penjualan = [];
