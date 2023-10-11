@@ -167,10 +167,13 @@
         </div>
     </div>
 </div>
-
+<div class="col-xl-15">
+    <div class="card">
 <div class="col-xl-15 grid-margin stretch-card flex-column">
     <h5 class="mb-2 text-titlecase mb-4">Total Penjualan per Bulan</h5>
     <canvas id="myChart" height="25%" width="100%"></canvas>
+</div>
+    </div>
 </div>
 
 @endif

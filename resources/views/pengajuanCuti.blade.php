@@ -165,22 +165,26 @@
 
                 <div class="form-group">
                     <label for="input-1">Tanggal Mulai Cuti<span style="color: #ff5252;">*</span></label>
-                    <input type="text" class="form-control" id="input-1" required name="tanggal_mulai_cuti" placeholder="yyyy-mm-dd hh:mm:ss" value="<?php echo date('Y-m-d') ?>">
+                    
+                    <input type="datetime-local" class="form-control" id="input-1" required name="tanggal_mulai_cuti"
+                    placeholder="yyyy-mm-dd hh:mm:ss"  value="<?php echo date('Y-m-d') ?>">
+                    
                 </div>
 
                 <div class="form-group">
                     <label for="input-1">Tanggal Selesai Cuti<span style="color: #ff5252;">*</span></label>
-                    <input type="text" class="form-control" id="input-1" required name="tanggal_selesai_cuti" placeholder="yyyy-mm-dd hh:mm:ss" value="<?php echo date('Y-m-d') ?>">
+                    <input type="datetime-local" class="form-control" id="input-1" required name="tanggal_selesai_cuti"
+                    placeholder="yyyy-mm-dd hh:mm:ss"  value="<?php echo date('Y-m-d') ?>">
                 </div>
 
                 <div class="form-group">
-                    <label for="input-11">Keterangan Cuti</label>
-                    <input type="text" class="form-control" id="input-12" name="keterangan_cuti" placeholder="Keterangan Cuti....">
+                    <label for="input-1">Keterangan Cuti<span style="color: #ff5252;">*</span></label>
+                    <input type="text" class="form-control" id="input-1" required name="keterangan_cuti" placeholder="Keterangan Cuti....">
                 </div>
 
                 <small style="color: #ff5252;">* Wajib Diisi</small>
                 <div class="btn-group float-sm-right mt-2">
-                    <button onclick="validateForm('ubhPengajuanCuti', 'karyawan', 'tanggal_cuti')" type="submit" class="btn btn-success px-5">Simpan</button>
+                    <button onclick="validateForm('tbhPengajuanCuti', 'tanggal_mulai_cuti', 'tanggal_selesai_cuti','keterangan_cuti')" type="submit" class="btn btn-success px-5">Simpan</button>
                 </div>
             </form>
         </div>
@@ -246,6 +250,11 @@
     </div>
     </div>
 </div>
+<!-- Di dalam tampilan Blade -->
+
+   
+
+
 <!-- End Modal -->
 @endsection
 @section('script')
@@ -492,4 +501,15 @@
         });
     }
 </script>
+<!-- Di dalam tampilan Blade -->
+@if (session('error'))
+    <script>
+        swal({
+            icon: 'error',
+            title: 'Error',
+            text: '{{ session('error') }}',
+        });
+    </script>
+@endif
+
 @endsection

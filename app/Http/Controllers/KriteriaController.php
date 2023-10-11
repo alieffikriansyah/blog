@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use App\kriteria;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
+use App\User;
+use Auth;
 class KriteriaController extends Controller
 {
     public function __construct()

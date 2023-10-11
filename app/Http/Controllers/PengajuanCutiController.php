@@ -8,6 +8,9 @@ use App\karyawan;
 use App\Absensi;
 use Auth;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+
+
 
 
 class PengajuanCutiController extends Controller
@@ -148,20 +151,84 @@ class PengajuanCutiController extends Controller
                 'aksi' => 'Tambah Pengajuan Cuti',
                 'fitur' => 'pengajuanCuti'
             ]);
-            $PengajuanCuti = new PengajuanCuti();
-            $PengajuanCuti->status_cuti = 'pending';
-            $PengajuanCuti->karyawan_id_karyawan = $request->karyawan;
-            $PengajuanCuti->tanggal_mulai_cuti = $request->tanggal_mulai_cuti;
-            $PengajuanCuti->tanggal_selesai_cuti = $request->tanggal_selesai_cuti;
-
-            if ($request->keterangan_cuti) {
-                $PengajuanCuti->keterangan_cuti = $request->keterangan_cuti;
+        
+            $currentYear = Carbon::now()->year;
+            $karyawan = PengajuanCuti::where('karyawan_id_karyawan','=',$request->karyawan )->get(); 
+            
+            
+                
+            // dd($karyawan);
+             // $karyawan = Karyawan::Where('id_karyawan','=', $id_karyawan)->get();   
+            // $tanggalMulai = PengajuanCuti::where('tanggal_mulai_cuti','=',$request->tanggal_mulai_cuti)->get();
+            // $tanggalSelesai = PengajuanCuti::where('tanggal_selesai_cuti','=',$request->tanggal_selesai_cuti)->get();
+            $totalCuti = 0;
+            $batasCuti = 10;
+            $endDate = Carbon::now()->year;
+            foreach($karyawan as $kar){
+            $startDate = Carbon::parse( $kar->tanggal_mulai_cuti);
+            $endDate = Carbon::parse($kar->tanggal_selesai_cuti);
+           
+            // Menghitung selisih hari antara tanggal awal dan akhir
+             $hariCuti = $startDate->diffInDays($endDate);
+            //  dd($hariCuti);
+             $totalCuti += $hariCuti;
+             
+             $endDate = Carbon::parse($endDate);
+             $yearOnly = $endDate->year;
+         
             }
 
-            $PengajuanCuti->save();
+            $sisaCuti = $batasCuti - $totalCuti;
+        //    dd($totalCuti,$batasCuti);
 
+
+             if ($totalCuti <= $sisaCuti && $yearOnly <= $currentYear) {
+                $PengajuanCuti = new PengajuanCuti();
+                $PengajuanCuti->status_cuti = 'pending';
+                $PengajuanCuti->karyawan_id_karyawan = $request->karyawan;
+                $PengajuanCuti->tanggal_mulai_cuti = $request->tanggal_mulai_cuti;
+                $PengajuanCuti->tanggal_selesai_cuti = $request->tanggal_selesai_cuti;
+                $PengajuanCuti->keterangan_cuti = $request->keterangan_cuti;
+    
+               
+               
+                
+              
+                        $PengajuanCuti->save();
+                      
+                }
+              
+                 // Di dalam controller
+                return redirect()->back()->with('error', 'Karyawan tidak dapat mengambil cuti, karena telah melakukan cuti lebih dari 10 hari dalam setahun.');
+
+           
+                
+                    //  dd($totalCuti);
+       
+
+         
+
+         
+        
+
+
+            
+    
+
+           
+        
+            
+    
+           
+            
+            
+    
+    
+          
             DB::commit();
             return back()->with('success', 'Data PengajuanCuti baru telah berhasil ditambahakan');
+
+      
         } catch (Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Oops Sepertinya ada masalah pada sistem\n\nPesan error: ' . $e);
@@ -178,6 +245,12 @@ class PengajuanCutiController extends Controller
                 'aksi' => 'Terima Pengajuan Cuti',
                 'fitur' => 'pengajuanCuti'
             ]);
+            // \App\Absensi::create([
+            //     'user_id_user' => Auth::user()->id,
+            //     'aksi' => 'Terima Pengajuan Cuti',
+            //     'fitur' => 'pengajuanCuti'
+            // ]);
+            
             $PengajuanCuti = PengajuanCuti::find($request->id);
             $PengajuanCuti->status_cuti = 'terima';
 

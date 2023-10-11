@@ -108,6 +108,7 @@
                 <div class="form-group">
                     <label for="input-1">Tanggal Penjualan<span style="color: #ff5252;">*</span></label>
                     <input type="datetime-local" class="form-control" id="input-1" required name="tanggal_penjualan" placeholder="yyyy-mm-dd">
+                    
                 </div>
 
                 <div class="form-group">

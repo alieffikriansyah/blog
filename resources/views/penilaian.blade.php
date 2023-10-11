@@ -127,7 +127,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="POST" name="tbhAbsen" action="{{ route('penilaian.tambah') }}">
+                <form method="POST" name="tbhPenilaian" action="{{ route('penilaian.tambah') }}">
                     {{ csrf_field() }}
                     <!-- karyawan -->
                     <div class="form-group">
@@ -143,13 +143,13 @@
 
                     <div class="form-group">
                         <label for="input-1">Tanggal Penilaian<span style="color: #ff5252;">*</span></label>
-                        <input type="text" class="form-control" id="input-1" required name="waktu_penilaian"
+                        <input type="datetime-local" class="form-control" id="input-1" required name="waktu_penilaian"
                             placeholder="yyyy-mm-dd hh:mm:ss" value="<?php echo date('Y-m-d') ?>">
                     </div>
 
                     <div class="form-group">
                         <label for="input-1">Periode Penilaian<span style="color: #ff5252;">*</span></label>
-                        <input type="text" class="form-control" id="input-1" required name="periode_penilaian"
+                        <input type="datetime-local" class="form-control" id="input-1" required name="periode_penilaian"
                             placeholder="yyyy-mm-dd hh:mm:ss" value="<?php echo date('Y-m-d') ?>">
                     </div>
 
@@ -176,7 +176,7 @@
 
                     <small style="color: #ff5252;">* Wajib Diisi</small>
                     <div class="btn-group float-sm-right mt-2">
-                        <button onclick="validateForm('ubhPenilaian', 'karyawan', 'waktu_penilaian')" type="submit"
+                        <button onclick="validateForm('tbhPenilaian', 'karyawan', 'waktu_penilaian', 'periode_penilaian', 'idform_penilaian')" type="submit"
                             class="btn btn-success px-5">Simpan</button>
                     </div>
                 </form>
@@ -211,20 +211,20 @@
 
                     <div class="form-group">
                         <label for="input-1">Tanggal Penilaian<span style="color: #ff5252;">*</span></label>
-                        <input type="text" class="form-control" id="input-1" required name="waktu_penilaian"
+                        <input type="datetime-local" class="form-control" id="input-1" required name="waktu_penilaian"
                             placeholder="yyyy-mm-dd hh:mm:ss" value="<?php echo date('Y-m-d') ?>">
                     </div>
 
                     <div class="form-group">
                         <label for="input-1">Periode Penilaian<span style="color: #ff5252;">*</span></label>
-                        <input type="text" class="form-control" id="input-1" required name="periode_penilaian"
+                        <input type="datetime-local" class="form-control" id="input-1" required name="periode_penilaian"
                             placeholder="yyyy-mm-dd hh:mm:ss" value="<?php echo date('Y-m-d') ?>">
                     </div>
 
                     <div class="form-group">
                         <label for="input-11">Nama Penilai<span style="color: #ff5252;">*</span></label>
-                        <input type="text" class="form-control" id="input-12" required name="nama_penilai"
-                            placeholder="Nama Penilai...." value="{{Auth::user()->name}}">
+                        <input type="text" class="form-control" id="input-12" name="nama_penilai"
+                            placeholder="Nama Penilai...." value="{{Auth::user()->name}}" required readonly>
                     </div>
 
                     <div class="form-group">
@@ -244,7 +244,7 @@
 
                     <small style="color: #ff5252;">* Wajib Diisi</small>
                     <div class="btn-group float-sm-right mt-2">
-                        <button onclick="validateForm('ubhPenilaian', 'karyawan', 'waktu_penilaian')" type="submit"
+                        <button onclick="validateForm('ubhPenilaian', 'karyawan', 'waktu_penilaian','periode_penilaian','idform_penilaian',)" type="submit"
                             class="btn btn-success px-5">Simpan</button>
                     </div>
                 </form>
