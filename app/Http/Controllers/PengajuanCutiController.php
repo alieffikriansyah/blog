@@ -189,46 +189,14 @@ class PengajuanCutiController extends Controller
                 $PengajuanCuti->tanggal_mulai_cuti = $request->tanggal_mulai_cuti;
                 $PengajuanCuti->tanggal_selesai_cuti = $request->tanggal_selesai_cuti;
                 $PengajuanCuti->keterangan_cuti = $request->keterangan_cuti;
-    
-               
-               
-                
-              
-                        $PengajuanCuti->save();
-                      
-                }
-              
+                $PengajuanCuti->save();
+            } else {
                  // Di dalam controller
-                return redirect()->back()->with('error', 'Karyawan tidak dapat mengambil cuti, karena telah melakukan cuti lebih dari 10 hari dalam setahun.');
-
-           
-                
-                    //  dd($totalCuti);
-       
-
-         
-
-         
-        
-
-
-            
-    
-
-           
-        
-            
-    
-           
-            
-            
-    
-    
-          
+                 return redirect()->back()->with('error', 'Karyawan tidak dapat mengambil cuti, karena telah melakukan cuti lebih dari 10 hari dalam setahun.');
+            }
+              
             DB::commit();
             return back()->with('success', 'Data PengajuanCuti baru telah berhasil ditambahakan');
-
-      
         } catch (Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Oops Sepertinya ada masalah pada sistem\n\nPesan error: ' . $e);
@@ -240,29 +208,43 @@ class PengajuanCutiController extends Controller
     {
         DB::beginTransaction();
         try {
+            $PengajuanCuti = PengajuanCuti::find($request->id);
+
             \App\log::create([
                 'user_id_user' => Auth::user()->id,
-                'aksi' => 'Terima Pengajuan Cuti',
+                'aksi' => 'Terima Pengajuan Cuti untuk karyawan id ' . $PengajuanCuti->karyawan_id_karyawan,
                 'fitur' => 'pengajuanCuti'
             ]);
-            // \App\Absensi::create([
-            //     'user_id_user' => Auth::user()->id,
-            //     'aksi' => 'Terima Pengajuan Cuti',
-            //     'fitur' => 'pengajuanCuti'
-            // ]);
-            
-            $PengajuanCuti = PengajuanCuti::find($request->id);
+            \App\log::create([
+                'user_id_user' => Auth::user()->id,
+                'aksi' => 'Tambah Presensi Karyawan (Terima Cuti)',
+                'fitur' => 'presensi'
+            ]);
+
             $PengajuanCuti->status_cuti = 'terima';
-
-            if ($PengajuanCuti->absensi_id_absensi) {
-                $PengajuanCuti->save();
-
-                DB::commit();
-                return back()->with('success', 'Data PengajuanCuti telah berhasil diterima');
-            }
 
             $PengajuanCuti->save();
 
+            // setelah cuti diterima, insert ke absensi sesuai dari cuti yang diterima
+            $selisihHariInTime = strtotime($PengajuanCuti->tanggal_selesai_cuti) - strtotime($PengajuanCuti->tanggal_mulai_cuti);
+            $selisihHari = round($selisihHariInTime / (60 * 60 *24)) + 1;
+            $tglCuti = date_create($PengajuanCuti->tanggal_mulai_cuti);
+            for ($i=0; $i < $selisihHari; $i++) { 
+                // insert absensi dari tanggal_mulai_cuti - tanggal_selesai_cuti
+                print_r($tglCuti);
+                $absensi = new Absensi();
+                $absensi->karyawan_id_karyawan = $PengajuanCuti->karyawan_id_karyawan;
+                $absensi->tanggaldanwaktu_absensi = $tglCuti;
+                $absensi->status_hari = 'masuk';
+                $absensi->tipe_absensi = 'cuti';
+                $absensi->keterangan_absensi = 'cuti - ' . $PengajuanCuti->keterangan_cuti;
+                $absensi->save();
+
+                // nambah tanggal
+                $tglCuti = date_add($tglCuti,date_interval_create_from_date_string("1 day") );
+            }
+
+            // dd($selisihHari);
 
             DB::commit();
             return back()->with('success', 'Data PengajuanCuti telah berhasil diterima');

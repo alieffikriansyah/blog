@@ -126,7 +126,7 @@ class PenilaianController extends Controller
         try {
             \App\log::create([
                 'user_id_user' => Auth::user()->id,
-                'aksi' => 'Tambah Penilaian',
+                'aksi' => 'Tambah Penilaian '. $request->karyawan,
                 'fitur' => 'penilaian'
             ]);
             $Penilaian = new Penilaian();
@@ -235,13 +235,16 @@ class PenilaianController extends Controller
     {
         DB::beginTransaction();
         try {
+            
+            $Penilaian = Penilaian::find($request->id_penilaian);
+            // dd($request->all());
+
             \App\log::create([
                 'user_id_user' => Auth::user()->id,
-                'aksi' => 'Update Penilaian',
-                'fitur' => 'peilaian'
+                'aksi' => 'Update Penilaian '. $Penilaian->karyawan_id_karyawan,
+                'fitur' => 'penilaian'
             ]);
-            $Penilaian = Penilaian::find($request->id_penilaian);
-            dd($request->all());
+
             $Penilaian->karyawan_id_karyawan = $request->karyawan;
             $Penilaian->form_penilaian_idtable1 = $request->idform_penilaian;
             $Penilaian->waktu_penilaian = $request->waktu_penilaian;
@@ -263,9 +266,10 @@ class PenilaianController extends Controller
     {
         DB::beginTransaction();
         try {
+            $penilaian = Penilaian::find($id_penilaian);
             \App\log::create([
                 'user_id_user' => Auth::user()->id,
-                'aksi' => 'Hapus Penilaian',
+                'aksi' => 'Hapus Penilaian '. $penilaian->karyawan_id_karyawan,
                 'fitur' => 'penilaian'
             ]);
             Penilaian::find($id_penilaian)->delete();
